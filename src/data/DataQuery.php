@@ -29,23 +29,18 @@ class DataQuery
     /** @var array */
     protected array $condition;
 
-    /** @var array */
-    protected array $types;
-
     /**
      * DataQuery constructor.
      * @param string $table
      * @param array $attributes
      * @param array $condition
-     * @param array $types
      * @param Driver $driver
      */
-    public function __construct(string $table, array $attributes, array $condition, array $types, Driver $driver)
+    public function __construct(string $table, array $attributes, array $condition, Driver $driver)
     {
         $this->table = $driver->quote($table);
         $this->attributes = $attributes;
         $this->condition = $condition;
-        $this->types = $types;
         $this->driver = $driver;
     }
 }

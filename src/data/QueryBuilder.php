@@ -157,7 +157,7 @@ class QueryBuilder
      */
     public function join(string $type, string $table, array $condition): QueryBuilder
     {
-        $this->joins[$table] = ['type' => $type, 'condition' => $condition];
+        $this->joins[] = compact(['table', 'type', 'condition']);
         return $this;
     }
 
@@ -460,31 +460,32 @@ class QueryBuilder
         if ($this->union) {
             $query = $this->union->buildQuery() . ' UNION ' . $this->unionAll ? 'ALL ' : '';
         }
-        $query .= "SELECT";
+        $query .= "SELECT ";
+        $select = [];
         if ($this->fields) {
-            $query .= " " . implode(', ', $this->fields);
+            $select[] = implode(', ', $this->fields);
         }
         if ($this->distinct) {
-            $query .= " DISTINCT (" . implode(', ', $this->distinct) . ")";
+            $select[] = "DISTINCT(" . implode(', ', $this->distinct) . ")";
         }
         if ($this->count) {
-            $query .= " COUNT({$this->count})";
+            $select[] = "COUNT({$this->count})";
         }
         if ($this->max) {
-            $query .= " MAX({$this->max})";
+            $select[] = "MAX({$this->max})";
         }
         if ($this->min) {
-            $query .= " MIN({$this->min})";
+            $select[] = "MIN({$this->min})";
         }
         if ($this->sum) {
-            $query .= " SUM({$this->sum})";
+            $select[] = "SUM({$this->sum})";
         }
-        $query .= " FROM " . implode(', ', $this->tables);
-        foreach ($this->joins as $table => &$join) {
-            $query .= " {$join['type']} JOIN $table ON " . implode(' AND ', $join['condition']);
+        $query .= implode(', ', $select) . " FROM " . implode(', ', $this->tables);
+        foreach ($this->joins as &$join) {
+            $query .= " {$join['type']} JOIN {$join['table']} ON " . implode(' AND ', $join['condition']);
         }
         if ($this->where) {
-            $query .= " WHERE " . implode($this->where[0][1]);
+            $query .= " WHERE " . implode(' ', $this->where[0][1]);
             for ($i = 1; $i < count($this->where); $i++) {
                 $query .= " {$this->where[$i][0]} " . implode(' ', $this->where[$i][1]);
             }
@@ -496,13 +497,14 @@ class QueryBuilder
             $query .= " HAVING ({$this->having})";
         }
         if ($this->orderBy) {
-            $query .= " ORDER BY " . implode(', ', $this->orderBy[1]) . " {$this->orderBy[0]}";
+            $query .= " ORDER BY (" . implode(', ', $this->orderBy[1]) . ") {$this->orderBy[0]}";
         }
         if ($this->limit) {
-            $query .= " LIMIT {$this->limit}";
+
+            $query .= " LIMIT {$this->nextKey($this->limit)}";
         }
         if ($this->offset) {
-            $query .= " OFFSET {$this->offset}";
+            $query .= " OFFSET {$this->nextKey($this->offset)}";
         }
         return $query;
     }
@@ -513,9 +515,9 @@ class QueryBuilder
      */
     private function nextKey($value): string
     {
-        $key = ":p_" . $this->i++;
+        $key = "c_" . $this->i++;
         $this->params[$key] = $value;
-        return $key;
+        return ":$key";
     }
 
     /**

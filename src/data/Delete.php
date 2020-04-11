@@ -22,12 +22,11 @@ class Delete extends DataQuery
      * Delete constructor.
      * @param string $table
      * @param array $condition
-     * @param array $types
      * @param Driver $driver
      */
-    public function __construct(string $table, array $condition, array $types, Driver $driver)
+    public function __construct(string $table, array $condition, Driver $driver)
     {
-        parent::__construct($table, [], $condition, $types, $driver);
+        parent::__construct($table, [], $condition, $driver);
     }
 
     /**

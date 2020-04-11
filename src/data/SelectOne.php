@@ -25,7 +25,7 @@ class SelectOne extends DataQuery
     public function prepareExecute(string $style = 'assoc'): array
     {
         $condition = [];
-        $fields = $this->attributes ? implode(', ', $this->attributes) : '*';
+        $fields = $this->attributes ? implode(', ', $this->driver->quotes($this->attributes)) : '*';
         foreach ($this->condition as $name => &$value) {
             $condition[] = "{$this->driver->quote($name)}=:$name";
         }

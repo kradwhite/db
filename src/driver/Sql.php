@@ -68,7 +68,7 @@ abstract class Sql implements Driver
      */
     public function quote(string $object): string
     {
-        return $this->syntax->quote($object);
+        return $this->getSyntax()->quote($object);
     }
 
     /**

@@ -22,12 +22,11 @@ class Insert extends DataQuery
      * Insert constructor.
      * @param string $table
      * @param array $attributes
-     * @param array $types
      * @param Driver $driver
      */
-    public function __construct(string $table, array $attributes, array $types, Driver $driver)
+    public function __construct(string $table, array $attributes, Driver $driver)
     {
-        parent::__construct($table, $attributes, [], $types, $driver);
+        parent::__construct($table, $attributes, [], $driver);
     }
 
     /**

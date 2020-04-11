@@ -23,12 +23,11 @@ class Update extends DataQuery
      * @param string $table
      * @param array $attributes
      * @param array $condition
-     * @param array $types
      * @param Driver $driver
      */
-    public function __construct(string $table, array $attributes, array $condition, array $types, Driver $driver)
+    public function __construct(string $table, array $attributes, array $condition, Driver $driver)
     {
-        parent::__construct($table, $attributes, $condition, $types, $driver);
+        parent::__construct($table, $attributes, $condition, $driver);
     }
 
     /**
@@ -40,8 +39,8 @@ class Update extends DataQuery
         $fields = [];
         $params = [];
         foreach ($this->attributes as $name => &$value) {
-            $fields[] = "{$this->driver->quote($name)}=:v_$name";
-            $params["v_$name"] = $value;
+            $fields[] = "{$this->driver->quote($name)}=:$name";
+            $params[$name] = $value;
         }
         $where = [];
         foreach ($this->condition as $name => &$value) {
