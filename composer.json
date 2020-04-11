@@ -1,0 +1,27 @@
+{
+    "name": "kradwhite/db",
+    "description": "Executing sql queries. Building sql queries. Simple and lightweight.",
+    "keywords": ["sql", "query builder", "mysql", "postgresql"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandrov Artem",
+            "email": "kradwhite@mail.ru"
+        }
+    ],
+    "require": {
+        "php": "~7.4",
+        "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "kradwhite\\db\\": "src"
+        }
+    },
+    "require-dev": {
+        "codeception/codeception": "^4.1",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-asserts": "^1.0.0"
+    }
+}
