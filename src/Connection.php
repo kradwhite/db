@@ -108,7 +108,7 @@ class Connection
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function execute(string $query, array $params = []): int
+    public function prepareExecute(string $query, array $params = []): int
     {
         return $this->_prepareExecute($query, $params)->rowCount();
     }
@@ -121,7 +121,7 @@ class Connection
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function query(string $query, array $params = [], string $style = 'assoc'): array
+    public function prepareQuery(string $query, array $params = [], string $style = 'assoc'): array
     {
         $stmt = $this->_prepareExecute($query, $params);
         $result = $stmt->fetch($style);
@@ -137,7 +137,7 @@ class Connection
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function queryMultiple(string $query, array $params = [], string $style = 'assoc'): array
+    public function prepareQueryMultiple(string $query, array $params = [], string $style = 'assoc'): array
     {
         $stmt = $this->_prepareExecute($query, $params);
         $result = $stmt->fetchAll($style);
@@ -153,7 +153,7 @@ class Connection
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function queryColumn(string $query, array $params = [], int $column = 0): array
+    public function prepareQueryColumn(string $query, array $params = [], int $column = 0): array
     {
         $stmt = $this->_prepareExecute($query, $params);
         $result = $stmt->fetchColumn($column);
