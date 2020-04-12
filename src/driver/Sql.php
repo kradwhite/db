@@ -9,7 +9,7 @@ declare (strict_types=1);
 
 namespace kradwhite\db\driver;
 
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
 use kradwhite\db\syntax\Syntax;
 use PDO;
 
@@ -86,34 +86,34 @@ abstract class Sql implements Driver
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function begin()
     {
         if (!$this->getPdo()->beginTransaction()) {
-            throw new QueryException("Ошибка открытия транзации: " . $this->getPdo()->errorInfo(), $this->getPdo()->errorCode());
+            throw new PdoException("Ошибка открытия транзации: ", $this->getPdo());
         }
     }
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function commit()
     {
         if (!$this->getPdo()->commit()) {
-            throw new QueryException("Ошибка фиксации транзации: " . $this->getPdo()->errorInfo(), $this->getPdo()->errorCode());
+            throw new PdoException("Ошибка фиксации транзации: ", $this->getPdo());
         }
     }
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function rollback()
     {
         if (!$this->getPdo()->rollBack()) {
-            throw new QueryException("Ошибка отката транзации: " . $this->getPdo()->errorInfo(), $this->getPdo()->errorCode());
+            throw new PdoException("Ошибка отката транзации: ", $this->getPdo());
         }
     }
 

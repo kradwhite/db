@@ -9,7 +9,7 @@ declare (strict_types=1);
 
 namespace kradwhite\db\syntax;
 
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\BeforeQueryException;
 
 /**
  * Class MySqlSyntax
@@ -120,11 +120,11 @@ class MySqlSyntax extends SqlSyntax
      * @param string $oldName
      * @param string $newName
      * @return string
-     * @throws QueryException
+     * @throws BeforeQueryException
      */
     public function renameForeignKey(string $table, string $oldName, string $newName): string
     {
-        throw new QueryException("В MySql нельзя переименовывать внешние ключи");
+        throw new BeforeQueryException("В MySql нельзя переименовывать внешние ключи");
     }
 
     /**

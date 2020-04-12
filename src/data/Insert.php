@@ -10,7 +10,8 @@ declare (strict_types=1);
 namespace kradwhite\db\data;
 
 use kradwhite\db\driver\Driver;
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 
 /**
  * Class Insert
@@ -32,7 +33,8 @@ class Insert extends DataQuery
     /**
      * @param string|null $sequence
      * @return string
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function prepareExecute(string $sequence = null): string
     {

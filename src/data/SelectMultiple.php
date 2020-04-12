@@ -9,7 +9,8 @@ declare (strict_types=1);
 
 namespace kradwhite\db\data;
 
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 
 /**
  * Class SelectMultiple
@@ -22,7 +23,8 @@ class SelectMultiple extends DataQuery
      * @param array $order
      * @param int $limit
      * @return array
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function prepareExecute(string $style = 'assoc', array $order = [], int $limit = 0): array
     {

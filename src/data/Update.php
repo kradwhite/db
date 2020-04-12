@@ -10,7 +10,8 @@ declare (strict_types=1);
 namespace kradwhite\db\data;
 
 use kradwhite\db\driver\Driver;
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 
 /**
  * Class Update
@@ -31,7 +32,9 @@ class Update extends DataQuery
     }
 
     /**
-     * @throws QueryException
+     * @return int
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function prepareExecute(): int
     {

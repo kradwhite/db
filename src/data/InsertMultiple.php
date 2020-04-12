@@ -10,7 +10,8 @@ declare (strict_types=1);
 namespace kradwhite\db\data;
 
 use kradwhite\db\driver\Driver;
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 
 /**
  * Class InsertMultiple
@@ -32,7 +33,8 @@ class InsertMultiple extends DataQuery
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function prepareExecute()
     {

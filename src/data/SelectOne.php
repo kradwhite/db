@@ -9,7 +9,8 @@ declare (strict_types=1);
 
 namespace kradwhite\db\data;
 
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 
 /**
  * Class SelectOne
@@ -20,7 +21,8 @@ class SelectOne extends DataQuery
     /**
      * @param string $style
      * @return array
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function prepareExecute(string $style = 'assoc'): array
     {

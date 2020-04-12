@@ -10,9 +10,10 @@ declare (strict_types=1);
 namespace kradwhite\db\data;
 
 use kradwhite\db\driver\Driver;
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\BeforeQueryException;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 use kradwhite\db\StmtTrait;
-use PDOStatement;
 
 /**
  * Class QueryBuilder
@@ -433,7 +434,9 @@ class QueryBuilder
      * @param string $style
      * @param int $column
      * @return array
-     * @throws QueryException
+     * @throws BeforeQueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function prepareExecute(string $fetch = 'fetch', string $style = 'assoc', int $column = 0): array
     {
@@ -445,7 +448,7 @@ class QueryBuilder
         } else if ($fetch == 'column') {
             $result = $stmt->fetchColumn($column);
         } else {
-            throw new QueryException("Допустимые значения 1 аргумента: fetch | all | column");
+            throw new BeforeQueryException("Допустимые значения 1 аргумента: fetch | all | column");
         }
         $this->closeCursor($stmt);
         return $result;

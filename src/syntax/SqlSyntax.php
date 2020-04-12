@@ -137,11 +137,7 @@ abstract class SqlSyntax implements Syntax
      */
     protected function defaultOption(array &$options): string
     {
-        if (isset($options['default'])) {
-            $default = is_string($options['default']) ? $this->quote($options['default']) : $options['default'];
-            return " DEFAULT $default";
-        }
-        return '';
+        return isset($options['default']) ? " DEFAULT {$options['default']}" : '';
     }
 
     /**

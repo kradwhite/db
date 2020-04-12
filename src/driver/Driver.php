@@ -9,7 +9,7 @@ declare (strict_types=1);
 
 namespace kradwhite\db\driver;
 
-use kradwhite\db\QueryException;
+use kradwhite\db\exception\PdoException;
 use kradwhite\db\syntax\Syntax;
 use PDO;
 
@@ -26,19 +26,19 @@ interface Driver
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function begin();
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function commit();
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function rollback();
 

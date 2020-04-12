@@ -17,6 +17,8 @@ use kradwhite\db\data\SelectMultiple;
 use kradwhite\db\data\SelectOne;
 use kradwhite\db\data\Update;
 use kradwhite\db\driver\Driver;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 use kradwhite\db\structure\Table;
 
 /**
@@ -38,78 +40,73 @@ class Connection
     /**
      * @param string $table
      * @param array $attributes
-     * @param array $types
      * @return data\Insert
      */
-    public function insert(string $table, array $attributes, array $types = []): Insert
+    public function insert(string $table, array $attributes): Insert
     {
-        return new Insert($table, $attributes, $types, $this->driver);
+        return new Insert($table, $attributes, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $fields
      * @param array $attributes
-     * @param array $types
      * @return InsertMultiple
      */
-    public function insertMultiple(string $table, array $fields, array $attributes, array $types = []): InsertMultiple
+    public function insertMultiple(string $table, array $fields, array $attributes): InsertMultiple
     {
-        return new InsertMultiple($table, $attributes, $fields, $types, $this->driver);
+        return new InsertMultiple($table, $attributes, $fields, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $attributes
      * @param array $condition
-     * @param array $types
      * @return Update
      */
-    public function update(string $table, array $attributes, array $condition, array $types = []): Update
+    public function update(string $table, array $attributes, array $condition): Update
     {
-        return new Update($table, $attributes, $condition, $types, $this->driver);
+        return new Update($table, $attributes, $condition, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $condition
-     * @param array $types
      * @return Delete
      */
-    public function delete(string $table, array $condition, array $types = []): Delete
+    public function delete(string $table, array $condition): Delete
     {
-        return new Delete($table, $condition, $types, $this->driver);
+        return new Delete($table, $condition, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $fields
      * @param array $condition
-     * @param array $types
      * @return SelectOne
      */
-    public function selectOne(string $table, array $fields, array $condition, array $types = []): SelectOne
+    public function selectOne(string $table, array $fields, array $condition): SelectOne
     {
-        return new SelectOne($table, $fields, $condition, $types, $this->driver);
+        return new SelectOne($table, $fields, $condition, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $fields
      * @param array $condition
-     * @param array $types
      * @return SelectMultiple
      */
-    public function selectMultiple(string $table, array $fields, array $condition, array $types = []): SelectMultiple
+    public function selectMultiple(string $table, array $fields, array $condition): SelectMultiple
     {
-        return new SelectMultiple($table, $fields, $condition, $types, $this->driver);
+        return new SelectMultiple($table, $fields, $condition, $this->driver);
     }
 
     /**
      * @param string $query
      * @param array $params
      * @return int
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function execute(string $query, array $params = []): int
     {
@@ -121,7 +118,8 @@ class Connection
      * @param array $params
      * @param string $style
      * @return array
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function query(string $query, array $params = [], string $style = 'assoc'): array
     {
@@ -136,7 +134,8 @@ class Connection
      * @param array $params
      * @param string $style
      * @return array
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function queryMultiple(string $query, array $params = [], string $style = 'assoc'): array
     {
@@ -151,7 +150,8 @@ class Connection
      * @param array $params
      * @param int $column
      * @return array
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     public function queryColumn(string $query, array $params = [], int $column = 0): array
     {
@@ -181,7 +181,7 @@ class Connection
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function begin()
     {
@@ -190,7 +190,7 @@ class Connection
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function commit()
     {
@@ -199,7 +199,7 @@ class Connection
 
     /**
      * @return void
-     * @throws QueryException
+     * @throws PdoException
      */
     public function rollback()
     {

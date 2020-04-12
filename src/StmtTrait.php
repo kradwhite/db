@@ -10,6 +10,8 @@ declare (strict_types=1);
 namespace kradwhite\db;
 
 use kradwhite\db\driver\Driver;
+use kradwhite\db\exception\PdoException;
+use kradwhite\db\exception\PdoStatementException;
 use PDOStatement;
 
 /**
@@ -25,14 +27,15 @@ trait StmtTrait
      * @param string $query
      * @param array $params
      * @return PDOStatement
-     * @throws QueryException
+     * @throws PdoException
+     * @throws PdoStatementException
      */
     protected function _prepareExecute(string $query, array $params = []): PDOStatement
     {
         if (!$stmt = $this->driver->getPdo()->prepare($query)) {
-            throw new QueryException("Ошибка подготовки запроса: " . $this->driver->getPdo()->errorInfo(), $this->driver->getPdo()->errorCode());
+            throw new PdoException("Ошибка подготовки запроса: " . $this->driver->getPdo()->errorInfo(), $this->driver->getPdo()->errorCode());
         } else if (!$stmt->execute($params)) {
-            throw new QueryException("Ошика выполнения запроса: " . $stmt->errorInfo(), $stmt->errorCode());
+            throw new PdoStatementException("Ошика выполнения запроса: ", $stmt);
         } else {
             return $stmt;
         }
@@ -41,12 +44,12 @@ trait StmtTrait
     /**
      * @param PDOStatement $stmt
      * @return void
-     * @throws QueryException
+     * @throws PdoStatementException
      */
     protected function closeCursor(PDOStatement $stmt)
     {
         if (!$stmt->closeCursor()) {
-            throw new QueryException("Ошибка закрытия курсора: " . $stmt->errorInfo(), $stmt->errorInfo());
+            throw new PdoStatementException("Ошибка закрытия курсора: ", $stmt);
         }
     }
 }
