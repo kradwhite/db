@@ -48,11 +48,11 @@ class DriverFactory
     public static function buildFromArray(string $driver, array $attributes): Driver
     {
         return self::build($driver,
-            $attributes['host'] ?? '',
-            $attributes['dbName'] ?? '',
-            $attributes['user'] ?? '',
-            $attributes['password'] ?? '',
-            $attributes['port'] ?? '',
-            $attributes['options'] ?? []);
+            isset($attributes['host']) ?? '',
+            isset($attributes['dbName']) ?? '',
+            isset($attributes['user']) ?? '',
+            isset($attributes['password']) ?? '',
+            isset($attributes['port']) ?? '',
+            isset($attributes['options']) ?? []);
     }
 }
