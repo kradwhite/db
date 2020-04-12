@@ -67,9 +67,9 @@ class Table
     public function addColumn(string $name, string $type, array $options = []): Table
     {
         if (isset($this->columns[$name])) {
-            throw new BeforeQueryException("Ошибка создания таблицы {$this->quote($this->table)}: повторное добавление колонки {$this->quote($name)}");
+            throw new BeforeQueryException("Повторное добавление колонки {$this->quote($name)}");
         }
-        $this->columns[$name] = compact([$type, $options]);
+        $this->columns[$name] = compact(['type', 'options']);
         return $this;
     }
 
@@ -144,10 +144,15 @@ class Table
      * @param array $options
      * @param string $name
      * @return Table
+     * @throws BeforeQueryException
      */
     public function addIndex(array $columns, array $options = [], string $name = ''): Table
     {
-        $this->indexes[$this->getSyntax()->buildIndexName($name, $this->table, $columns)] = compact([$columns, $options]);
+        $name = $this->getSyntax()->buildIndexName($name, $this->table, $columns);
+        if (isset($this->indexes[$name])) {
+            throw new BeforeQueryException("Повторное добавление индекса {$this->quote($name)}");
+        }
+        $this->indexes[$name] = compact(['columns', 'options']);
         return $this;
     }
 
@@ -207,11 +212,15 @@ class Table
      * @param array $options
      * @param string $name
      * @return Table
+     * @throws BeforeQueryException
      */
     public function addForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
         $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $columns, $table, $columns2);
-        $this->foreignKeys[$name] = compact([$columns, $table, $columns2, $options]);
+        if (isset($this->foreignKeys[$name])) {
+            throw new BeforeQueryException("Повторное добавление внешнего ключа {$this->quote($name)}");
+        }
+        $this->foreignKeys[$name] = compact(['columns', 'table', 'columns2', 'options']);
         return $this;
     }
 
@@ -227,9 +236,9 @@ class Table
      */
     public function createForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
+        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $columns, $table, $columns2);
         $stmt = $this->_prepareExecute($this->getSyntax()->createForeignKey($name, $this->table, $columns, $table, $columns2, $options));
         if (!$stmt->execute()) {
-            $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $columns, $table, $columns2);
             throw new PdoStatementException("Ошибка создания внешнего ключа {$this->quote($name)}: ", $stmt);
         }
         return $this;
@@ -275,7 +284,7 @@ class Table
     public function primaryKey(string $column, array $options = []): Table
     {
         if (in_array($column, $this->primaryKeys['columns'])) {
-            throw new BeforeQueryException("Ошибка создания таблицы: дублирование первичного ключа {$this->quote($column)}");
+            throw new BeforeQueryException("Повторное добавление первичного ключа {$this->quote($column)}");
         }
         $this->primaryKeys['columns'][] = $column;
         $this->primaryKeys['options'] += $options;

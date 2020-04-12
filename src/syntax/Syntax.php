@@ -28,6 +28,12 @@ interface Syntax
     public function quotes(array &$objects): array;
 
     /**
+     * @param string $value
+     * @return string
+     */
+    public function valueQuote(string $value): string;
+
+    /**
      * @param string $table
      * @param array $columns
      * @param array $indexes

@@ -1,7 +1,7 @@
 <?php
 /**
- * Date: 11.04.2020
- * Time: 15:25
+ * Date: 12.04.2020
+ * Time: 11:44
  * Author: Artem Aleksandrov
  */
 
@@ -9,14 +9,10 @@ declare (strict_types=1);
 
 namespace kradwhite\tests\_mock;
 
-use kradwhite\db\driver\MySql;
+use kradwhite\db\driver\PostgreSql;
 use PDO;
 
-/**
- * Class MockMysqlDriver
- * @package kradwhite\tests\_mock
- */
-class MockMysqlDriver extends MySql
+class MockPostgreSqlDriver extends PostgreSql
 {
     /**
      * MockMysqlDriver constructor.

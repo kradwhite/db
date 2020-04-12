@@ -34,12 +34,12 @@ class MySqlSyntax extends SqlSyntax
             $query .= ",\n\tCONSTRAINT PRIMARY KEY{$this->indexType($primaryKeys['options'])} ($pkColumns)";
         }
         foreach ($foreignKeys as $name => &$fk) {
-            $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table2'], $fk['columns2'], $fk['options']);
+            $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
         }
         foreach ($indexes as $name => &$index) {
             $indexColumns = implode(', ', $this->quotes($index['columns']));
             $query .= ",\n\t" . (isset($index['options']['unique']) && $index['options']['unique']
-                    ? "CONSTRAINT UNIQUE INDEX{$this->quote($name)}{$this->indexType($index['options'])}"
+                    ? "CONSTRAINT UNIQUE INDEX {$this->quote($name)}{$this->indexType($index['options'])}"
                     : "INDEX {$this->quote($name)}{$this->indexType($index['options'])}")
                 . " ($indexColumns)";
         }
@@ -63,21 +63,9 @@ class MySqlSyntax extends SqlSyntax
      * @param array $options
      * @return string
      */
-    public function createColumn(string $table, string $name, string $type, array $options = []): string
-    {
-        return parent::createColumn($table, $name, $type, $options) . $this->columnOptions($options);
-    }
-
-    /**
-     * @param string $table
-     * @param string $name
-     * @param string $type
-     * @param array $options
-     * @return string
-     */
     public function alterColumn(string $table, string $name, string $type, array $options = []): string
     {
-        return parent::alterColumn($table, $name, $type, $options) . $this->columnOptions($options);
+        return parent::alterColumn($table, $name, $type, $options);
     }
 
     /**
@@ -98,7 +86,7 @@ class MySqlSyntax extends SqlSyntax
      */
     public function dropIndex(string $table, string $name): string
     {
-        return "DROP INDEX {$name} ON {$this->quote($table)}";
+        return "DROP INDEX {$this->quote($name)} ON {$this->quote($table)}";
     }
 
     /**

@@ -23,9 +23,9 @@ class InsertTest extends \Codeception\Test\Unit
     public function testPrepareExecute()
     {
         $attributes = ['col1' => 'value1', 'col2' => 33, 'col3' => true];
-        $insert = new Insert('test', $attributes, $this->tester->getDriver());
+        $insert = new Insert('test', $attributes, $this->tester->mysqlDriver());
         $insert->prepareExecute();
-        $this->assertEquals($this->tester->getDriver()->getPdo()->getQuery(), 'INSERT INTO `test` (`col1`, `col2`, `col3`) VALUES (:col1, :col2, :col3)');
-        $this->assertEquals($this->tester->getDriver()->getPdo()->getParams(), $attributes, print_r($this->tester->getDriver()->getPdo()->getParams(), true));
+        $this->assertEquals($this->tester->mysqlDriver()->getPdo()->getQuery(), 'INSERT INTO `test` (`col1`, `col2`, `col3`) VALUES (:col1, :col2, :col3)');
+        $this->assertEquals($this->tester->mysqlDriver()->getPdo()->getParams(), $attributes, print_r($this->tester->mysqlDriver()->getPdo()->getParams(), true));
     }
 }

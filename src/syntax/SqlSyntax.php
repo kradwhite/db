@@ -86,6 +86,15 @@ abstract class SqlSyntax implements Syntax
     }
 
     /**
+     * @param string|int|float|bool|null $value
+     * @return string
+     */
+    public function valueQuote($value): string
+    {
+        return is_string($value) ? "'$value'" : (string)$value;
+    }
+
+    /**
      * @param array $objects
      * @return array
      */
@@ -128,7 +137,7 @@ abstract class SqlSyntax implements Syntax
      */
     protected function columnOptions(array &$options): string
     {
-        return $this->defaultOption($options) . $this->nullOption($options);
+        return $this->limitColumnOption($options) . $this->defaultOption($options) . $this->nullOption($options);
     }
 
     /**
@@ -137,7 +146,7 @@ abstract class SqlSyntax implements Syntax
      */
     protected function defaultOption(array &$options): string
     {
-        return isset($options['default']) ? " DEFAULT {$options['default']}" : '';
+        return isset($options['default']) ? " DEFAULT {$this->valueQuote($options['default'])}" : '';
     }
 
     /**
@@ -146,7 +155,7 @@ abstract class SqlSyntax implements Syntax
      */
     protected function nullOption(array &$options): string
     {
-        return array_key_exists('null', $options) && $options['null'] ? ' NULL' : ' NOT NULL';
+        return isset($options['null']) && $options['null'] ? ' NULL' : ' NOT NULL';
     }
 
     /**
@@ -180,6 +189,15 @@ abstract class SqlSyntax implements Syntax
      * @param array $options
      * @return string
      */
+    protected function limitColumnOption(array &$options): string
+    {
+        return isset($options['limit']) && $options['limit'] ? "({$options['limit']})" : '';
+    }
+
+    /**
+     * @param array $options
+     * @return string
+     */
     protected function foreignKeyOptions(array $options): string
     {
         $query = '';
@@ -202,7 +220,7 @@ abstract class SqlSyntax implements Syntax
         foreach ($columns as $name => &$column) {
             $strColumn = "\t{$this->quote($name)} {$column['type']}";
             if (isset($column['options'])) {
-                $strColumn = $this->columnOptions($column['options']);
+                $strColumn .= $this->columnOptions($column['options']);
             }
             $strColumns[] = $strColumn;
         }

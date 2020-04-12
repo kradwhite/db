@@ -26,18 +26,18 @@ class PostgreSqlSyntax extends SqlSyntax
      */
     public function createTable(string $table, array $columns, array $indexes, array $foreignKeys, array $primaryKeys, array $options): string
     {
-        $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)}(\n{$this->columnsToString($columns)}";
+        $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)} (\n{$this->columnsToString($columns)}";
         if ($primaryKeys['columns']) {
             $query .= ",\n\tPRIMARY KEY (" . implode(', ', $this->quotes($primaryKeys['columns'])) . ')';
         }
         foreach ($foreignKeys as $name => &$fk) {
-            $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table2'], $fk['columns2'], $fk['options']);
+            $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
         }
-        $query .= "\n);";
+        $query .= ");\n";
         foreach ($indexes as $name => &$index) {
-            $query .= "\n" . $this->createIndex($table, $index['columns'], $index['options'], $name) . ';';
+            $query .= $this->createIndex($table, $index['columns'], $index['options'], $name) . ";\n";
         }
-        return $query . "\n";
+        return $query;
     }
 
     /**
@@ -58,7 +58,7 @@ class PostgreSqlSyntax extends SqlSyntax
      */
     public function renameIndex(string $table, string $oldName, string $newName): string
     {
-        return "ALTER INDEX {$this->quote($oldName)} TO {$this->quote($newName)}";
+        return "ALTER INDEX {$this->quote($oldName)} RENAME TO {$this->quote($newName)}";
     }
 
     /**

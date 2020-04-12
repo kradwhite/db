@@ -22,8 +22,8 @@ class QueryBuilderTest extends \Codeception\Test\Unit
     // tests
     public function testPrepareExecute()
     {
-        $mockPdo = $this->tester->getDriver()->getPdo();
-        $queryBuilder = new QueryBuilder($this->tester->getDriver());
+        $mockPdo = $this->tester->mysqlDriver()->getPdo();
+        $queryBuilder = new QueryBuilder($this->tester->mysqlDriver());
         $queryBuilder->select(['t.col1', 't.col2'])
             ->distinct(['t.col3'])
             ->count('t.col4')
