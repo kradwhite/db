@@ -158,7 +158,7 @@ class MySqlSyntax extends SqlSyntax
      */
     private function indexType(array &$options): string
     {
-        return ' USING ' . (isset($options['type']) ? $options['type'] : 'BTREE');
+        return ' USING ' . ($options['type'] ?? 'BTREE');
     }
 
     /**

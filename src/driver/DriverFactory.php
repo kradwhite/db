@@ -32,7 +32,7 @@ class DriverFactory
     {
         if ($driver == 'mysql') {
             return new MySql($host, $dbName, $user, $password, $port, $options);
-        } else if ($driver == 'pgslq') {
+        } else if ($driver == 'pgsql') {
             return new PostgreSql($host, $dbName, $user, $password, $port, $options);
         } else {
             throw new BeforeQueryException("Драйвер '$driver' не поддерживается");
@@ -45,14 +45,17 @@ class DriverFactory
      * @return Driver
      * @throws BeforeQueryException
      */
-    public static function buildFromArray(string $driver, array $attributes): Driver
+    public static function buildFromArray(array $attributes, string $driver = ''): Driver
     {
+        if (!$driver) {
+            $driver = $attributes['driver'] ?? '';
+        }
         return self::build($driver,
-            isset($attributes['host']) ?? '',
-            isset($attributes['dbName']) ?? '',
-            isset($attributes['user']) ?? '',
-            isset($attributes['password']) ?? '',
-            isset($attributes['port']) ?? '',
-            isset($attributes['options']) ?? []);
+            $attributes['host'] ?? '',
+            $attributes['dbName'] ?? '',
+            $attributes['user'] ?? '',
+            $attributes['password'] ?? '',
+            $attributes['port'] ?? '',
+            $attributes['options'] ?? []);
     }
 }
