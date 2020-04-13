@@ -15,6 +15,21 @@ namespace kradwhite\db\syntax;
  */
 abstract class SqlSyntax implements Syntax
 {
+    /** @var array */
+    private const Types = [
+        'int' => 'INT',
+        'integer' => 'INTEGER',
+        'smallint' => 'SMALLINT',
+        'bigint' => 'BIGINT',
+        'bool' => 'BOOLEAN',
+        'time' => 'TIME',
+        'timestamp' => 'TIMESTAMP',
+        'date' => 'DATE',
+        'character' => 'CHARACTER',
+        'string' => 'VARCHAR',
+        'decimal' => 'DECIMAL',
+    ];
+
     /**
      * @param string $table
      * @return string
@@ -33,7 +48,7 @@ abstract class SqlSyntax implements Syntax
      */
     public function createColumn(string $table, string $name, string $type, array $options = []): string
     {
-        return "ALTER TABLE {$this->quote($table)} ADD COLUMN {$this->quote($name)} $type{$this->columnOptions($options)}";
+        return "ALTER TABLE {$this->quote($table)} ADD COLUMN {$this->quote($name)} {$this->columnType($type, $options)}{$this->columnOptions($options)}";
     }
 
     /**
@@ -45,7 +60,7 @@ abstract class SqlSyntax implements Syntax
      */
     public function alterColumn(string $table, string $name, string $type, array $options = []): string
     {
-        return "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)} $type{$this->columnOptions($options)}";
+        return "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)} {$this->columnType($type, $options)}{$this->columnOptions($options)}";
     }
 
     /**
@@ -132,12 +147,22 @@ abstract class SqlSyntax implements Syntax
     }
 
     /**
+     * @param string $type
+     * @param array $options
+     * @return string
+     */
+    protected function columnType(string $type, array &$options): string
+    {
+        return (self::Types[$type] ?? $type) . $this->limitColumnOption($options);
+    }
+
+    /**
      * @param array $options
      * @return string
      */
     protected function columnOptions(array &$options): string
     {
-        return $this->limitColumnOption($options) . $this->defaultOption($options) . $this->nullOption($options);
+        return $this->defaultOption($options) . $this->nullOption($options);
     }
 
     /**
@@ -218,8 +243,9 @@ abstract class SqlSyntax implements Syntax
     {
         $strColumns = [];
         foreach ($columns as $name => &$column) {
-            $strColumn = "\t{$this->quote($name)} {$column['type']}";
-            if (isset($column['options'])) {
+            $options = $column['options'] ?? [];
+            $strColumn = "\t{$this->quote($name)} {$this->columnType($column['type'], $options)}";
+            if ($options) {
                 $strColumn .= $this->columnOptions($column['options']);
             }
             $strColumns[] = $strColumn;

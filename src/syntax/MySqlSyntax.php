@@ -17,6 +17,17 @@ use kradwhite\db\exception\BeforeQueryException;
  */
 class MySqlSyntax extends SqlSyntax
 {
+    /** @var array */
+    private const MySqlTypes = [
+        'float' => 'FLOAT',
+        'double' => 'DOUBLE',
+        'text' => 'LONGTEXT',
+        'auto' => 'INT',
+        'smallauto' => 'SMALLINT',
+        'bigauto' => 'BIGINT',
+        'datetime' => 'DATETIME',
+    ];
+
     /**
      * @param string $table
      * @param array $columns
@@ -150,6 +161,22 @@ class MySqlSyntax extends SqlSyntax
     protected function afterOption(array &$options): string
     {
         return isset($options['after']) && $options['after'] ? " AFTER {$this->quote($options['after'])}" : '';
+    }
+
+    /**
+     * @param string $type
+     * @param array $options
+     * @return string
+     */
+    protected function columnType(string $type, array &$options): string
+    {
+        $result = isset(self::MySqlTypes[$type])
+            ? self::MySqlTypes[$type] . $this->limitColumnOption($options)
+            : parent::columnType($type, $options);
+        if (in_array($type, ['auto', 'smallauto', 'bigauto'])) {
+            $result .= ' AUTO INCREMENT';
+        }
+        return $result;
     }
 
     /**

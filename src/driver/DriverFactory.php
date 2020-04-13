@@ -47,10 +47,7 @@ class DriverFactory
      */
     public static function buildFromArray(array $attributes, string $driver = ''): Driver
     {
-        if (!$driver) {
-            $driver = $attributes['driver'] ?? '';
-        }
-        return self::build($driver,
+        return self::build($attributes['driver'] ?? $driver,
             $attributes['host'] ?? '',
             $attributes['dbName'] ?? '',
             $attributes['user'] ?? '',

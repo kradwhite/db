@@ -42,7 +42,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
     {
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $table = $this->getTable();
-        $table->createColumn('col', 'VARCHAR', ['null' => false, 'limit' => 256, 'default' => '', 'after' => 'col3']);
+        $table->createColumn('col', 'string', ['null' => false, 'limit' => 256, 'default' => '', 'after' => 'col3']);
         $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE `test` ADD COLUMN `col` VARCHAR(256) DEFAULT '' NOT NULL AFTER `col3`");
         $this->assertEquals($mockPdo->getParams(), []);
     }
@@ -51,7 +51,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
     {
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $table = $this->getTable();
-        $table->alterColumn('col', 'BIGINT', ['null' => true, 'limit' => 15, 'default' => 1000, 'after' => 'col44']);
+        $table->alterColumn('col', 'bigint', ['null' => true, 'limit' => 15, 'default' => 1000, 'after' => 'col44']);
         $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE `test` ALTER COLUMN `col` BIGINT(15) DEFAULT 1000 NULL AFTER `col44`");
         $this->assertEquals($mockPdo->getParams(), []);
     }
@@ -184,10 +184,10 @@ class MySqlTableTest extends \Codeception\Test\Unit
     {
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $table = $this->getTable();
-        $table->addColumn('col1', 'INTEGER', ['null' => false])
-            ->addColumn('col2', 'VARCHAR', ['default' => 'none'])
-            ->addColumn('ext_id', 'INTEGER', ['null' => false])
-            ->addColumn('id', 'INTEGER', ['null' => false])
+        $table->addColumn('col1', 'integer', ['null' => false])
+            ->addColumn('col2', 'string', ['default' => 'none'])
+            ->addColumn('ext_id', 'integer', ['null' => false])
+            ->addColumn('id', 'auto', ['null' => false])
             ->addForeignKey(['ext_id'], 'ext_test', ['id'], ['update' => 'NOT ACTION', 'delete' => 'CASCADE'])
             ->addIndex(['ext_id'])
             ->addIndex(['col1', 'col2'], ['unique' => true])
@@ -197,7 +197,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
             . "\t`col1` INTEGER NOT NULL,\n"
             . "\t`col2` VARCHAR DEFAULT 'none' NOT NULL,\n"
             . "\t`ext_id` INTEGER NOT NULL,\n"
-            . "\t`id` INTEGER NOT NULL,\n"
+            . "\t`id` INT AUTO INCREMENT NOT NULL,\n"
             . "\tCONSTRAINT PRIMARY KEY USING BTREE (`id`),\n"
             . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_id_ext_test_id` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NOT ACTION,\n"
             . "\tINDEX `test_ext_id_idx` USING BTREE (`ext_id`),\n"

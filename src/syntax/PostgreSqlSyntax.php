@@ -15,6 +15,18 @@ namespace kradwhite\db\syntax;
  */
 class PostgreSqlSyntax extends SqlSyntax
 {
+    /** @var array */
+    private const PostgreSqlTypes = [
+        'float' => 'REAL',
+        'double' => 'DOUBLE PRECISION',
+        'text' => 'TEXT',
+        'auto' => 'SERIAL',
+        'smallauto' => 'SMALLSERIAL',
+        'bigauto' => 'BIGSERIAL',
+        'json' => 'JSON',
+        'jsonb' => 'JSONB'
+    ];
+
     /**
      * @param string $table
      * @param array $columns
@@ -113,6 +125,16 @@ class PostgreSqlSyntax extends SqlSyntax
     public function quote(string $object): string
     {
         return "\"$object\"";
+    }
+
+    /**
+     * @param string $type
+     * @param array $options
+     * @return string
+     */
+    protected function columnType(string $type, array &$options): string
+    {
+        return self::PostgreSqlTypes[$type] ?? parent::columnType($type, $options);
     }
 
     /**
