@@ -35,7 +35,7 @@ class SelectMultiple extends DataQuery
         }
         $query = "SELECT $fields FROM {$this->table} WHERE " . implode(' AND ', $condition);
         if ($order) {
-            $ascOrDesc = array_pop($order);
+            $ascOrDesc = count($order) > 1 ? array_pop($order) : 'ASC';
             $query .= " ORDER BY (" . implode(', ', $this->driver->quotes($order)) . ") $ascOrDesc";
         }
         if ($limit) {
