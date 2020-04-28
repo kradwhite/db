@@ -1,0 +1,11 @@
+actor: PostgreSqlTester
+modules:
+  enabled:
+    - \Helper\PostgreSql
+    - Asserts
+    - Db:
+        dsn: 'pgsql:host=localhost;dbname=test;port=5434'
+        user: 'admin'
+        password: 'admin'
+        cleanup: true
+  step_decorators: ~

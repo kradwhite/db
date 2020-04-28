@@ -26,7 +26,7 @@ class PdoStatementException extends DbException
      */
     public function __construct(string $message, PDOStatement $stmt, ?Throwable $previous = null)
     {
-        $this->stmt = $stmt;
-        parent::__construct($message . $stmt->errorInfo() . "\n{$stmt->queryString}\n", $stmt->errorCode(), $previous);
+        $info = $stmt->errorInfo();
+        parent::__construct("$message\n" . implode(' ', $info) . "\nЗапрос:\n{$stmt->queryString}\n", $info[1], $previous);
     }
 }

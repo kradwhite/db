@@ -38,18 +38,21 @@ class PostgreSqlSyntax extends SqlSyntax
      */
     public function createTable(string $table, array $columns, array $indexes, array $foreignKeys, array $primaryKeys, array $options): string
     {
-        $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)} (\n{$this->columnsToString($columns)}";
-        if ($primaryKeys['columns']) {
-            $query .= ",\n\tPRIMARY KEY (" . implode(', ', $this->quotes($primaryKeys['columns'])) . ')';
+        $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)}";
+        if ($columnsToString = $this->columnsToString($columns)) {
+            $query .= "(\n$columnsToString";
+            if ($primaryKeys['columns']) {
+                $query .= ",\n\tPRIMARY KEY (" . implode(', ', $this->quotes($primaryKeys['columns'])) . ')';
+            }
+            foreach ($foreignKeys as $name => &$fk) {
+                $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
+            }
+            $query .= ");\n";
+            foreach ($indexes as $name => &$index) {
+                $query .= $this->createIndex($table, $index['columns'], $index['options'], $name);
+            }
         }
-        foreach ($foreignKeys as $name => &$fk) {
-            $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
-        }
-        $query .= ");\n";
-        foreach ($indexes as $name => &$index) {
-            $query .= $this->createIndex($table, $index['columns'], $index['options'], $name) . ";\n";
-        }
-        return $query;
+        return $query . ";\n";
     }
 
     /**
@@ -124,7 +127,7 @@ class PostgreSqlSyntax extends SqlSyntax
      */
     public function quote(string $object): string
     {
-        return "\"$object\"";
+        return '"' . $object . '"';
     }
 
     /**
