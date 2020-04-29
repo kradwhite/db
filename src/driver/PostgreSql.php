@@ -25,11 +25,10 @@ class PostgreSql extends Sql
     public function getPdo(): PDO
     {
         if (!$this->pdo) {
-            $dbName = $this->quote($this->dbName);
             if (!$this->port) {
                 $this->port = '5432';
             }
-            $this->pdo = new PDO("pgsql:host={$this->host};port={$this->port};dbname=$dbName", $this->user, $this->password, $this->options);
+            $this->pdo = new PDO("pgsql:host={$this->host};port={$this->port};dbname={$this->dbName}", $this->user, $this->password, $this->options);
         }
         return $this->pdo;
     }

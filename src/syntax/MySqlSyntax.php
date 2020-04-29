@@ -76,7 +76,7 @@ class MySqlSyntax extends SqlSyntax
      */
     public function alterColumn(string $table, string $name, string $type, array $options = []): string
     {
-        return parent::alterColumn($table, $name, $type, $options);
+        return "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)} {$this->columnType($type, $options)}{$this->columnOptions($options)}";
     }
 
     /**

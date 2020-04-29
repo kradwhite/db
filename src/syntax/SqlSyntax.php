@@ -53,18 +53,6 @@ abstract class SqlSyntax implements Syntax
 
     /**
      * @param string $table
-     * @param string $name
-     * @param string $type
-     * @param array $options
-     * @return string
-     */
-    public function alterColumn(string $table, string $name, string $type, array $options = []): string
-    {
-        return "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)} {$this->columnType($type, $options)}{$this->columnOptions($options)}";
-    }
-
-    /**
-     * @param string $table
      * @param string $oldName
      * @param string $newName
      * @return string

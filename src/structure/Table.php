@@ -42,7 +42,7 @@ class Table
     private array $primaryKeys = ['columns' => [], 'options' => []];
 
     /** @var array */
-    private array $options = [];
+    private array $options;
 
     /**
      * Table constructor.
@@ -79,14 +79,10 @@ class Table
      * @param array $options
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function createColumn(string $name, string $type, array $options = []): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->createColumn($this->table, $name, $type, $options));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка создания колонки {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->createColumn($this->table, $name, $type, $options));
         return $this;
     }
 
@@ -96,14 +92,10 @@ class Table
      * @param array $options
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function alterColumn(string $name, string $type, array $options = []): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->alterColumn($this->table, $name, $type, $options));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка изменения колонки {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->alterColumn($this->table, $name, $type, $options));
         return $this;
     }
 
@@ -112,14 +104,10 @@ class Table
      * @param string $newName
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function renameColumn(string $oldName, string $newName): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->renameColumn($this->table, $oldName, $newName));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка переименования колонки {$this->quote($oldName)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->renameColumn($this->table, $oldName, $newName));
         return $this;
     }
 
@@ -128,14 +116,10 @@ class Table
      * @param array $options
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function dropColumn(string $name, array $options = []): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->dropColumn($this->table, $name, $options));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка удаления колонки {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->dropColumn($this->table, $name, $options));
         return $this;
     }
 
@@ -162,15 +146,10 @@ class Table
      * @param string $name
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function createIndex(array $columns, array $options = [], string $name = ''): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->createIndex($this->table, $columns, $options, $name));
-        if (!$stmt->execute()) {
-            $name = $this->getSyntax()->buildIndexName($name, $this->table, $columns);
-            throw new PdoStatementException("Ошибка создания индекса {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->createIndex($this->table, $columns, $options, $name));
         return $this;
     }
 
@@ -179,14 +158,10 @@ class Table
      * @param string $newName
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function renameIndex(string $oldName, string $newName): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->renameIndex($this->table, $oldName, $newName));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка переименования индекса {$this->quote($oldName)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->renameIndex($this->table, $oldName, $newName));
         return $this;
     }
 
@@ -194,14 +169,10 @@ class Table
      * @param string $name
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function dropIndex(string $name): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->dropIndex($this->table, $name));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка удаления индекса {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->dropIndex($this->table, $name));
         return $this;
     }
 
@@ -232,15 +203,11 @@ class Table
      * @param string $name
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function createForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
         $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $columns, $table, $columns2);
-        $stmt = $this->_prepareExecute($this->getSyntax()->createForeignKey($name, $this->table, $columns, $table, $columns2, $options));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка создания внешнего ключа {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->createForeignKey($name, $this->table, $columns, $table, $columns2, $options));
         return $this;
     }
 
@@ -249,14 +216,10 @@ class Table
      * @param string $newName
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function renameForeignKey(string $oldName, string $newName): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->renameForeignKey($this->table, $oldName, $newName));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошика переименования внешнего ключа {$this->quote($oldName)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->renameForeignKey($this->table, $oldName, $newName));
         return $this;
     }
 
@@ -264,14 +227,10 @@ class Table
      * @param string $name
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function dropForeignKey(string $name): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->dropForeignKey($this->table, $name));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка удаления внешнего ключа {$this->quote($name)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->dropForeignKey($this->table, $name));
         return $this;
     }
 
@@ -309,42 +268,30 @@ class Table
     /**
      * @return void
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function create(): void
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->createTable($this->table, $this->columns, $this->indexes, $this->foreignKeys, $this->primaryKeys, $this->options));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка создания таблицы {$this->quote($this->table)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->createTable($this->table, $this->columns, $this->indexes, $this->foreignKeys, $this->primaryKeys, $this->options));
     }
 
     /**
      * @param string $newName
      * @return Table
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function rename(string $newName): Table
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->renameTable($this->table, $newName));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка переименования таблицы {$this->quote($this->table)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->renameTable($this->table, $newName));
         return $this;
     }
 
     /**
      * @return void
      * @throws PdoException
-     * @throws PdoStatementException
      */
     public function drop(): void
     {
-        $stmt = $this->_prepareExecute($this->getSyntax()->dropTable($this->table));
-        if (!$stmt->execute()) {
-            throw new PdoStatementException("Ошибка удаления таблицы {$this->quote($this->table)}: ", $stmt);
-        }
+        $this->_execute($this->getSyntax()->dropTable($this->table));
     }
 
     /**

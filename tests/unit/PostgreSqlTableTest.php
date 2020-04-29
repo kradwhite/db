@@ -180,7 +180,14 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
         $this->assertEquals($mockPdo->getParams(), []);
     }
 
-    public function testCreate()
+    public function testCreateFail()
+    {
+        $this->tester->expectThrowable(new BeforeQueryException('В таблице должна быть минимум 1 колонка'), function () {
+            $this->getTable()->create();
+        });
+    }
+
+    public function testCreateSuccess()
     {
         $mockPdo = $this->tester->pgsqlDriver()->getPdo();
         $table = $this->getTable();
@@ -188,7 +195,7 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
             ->addColumn('col2', 'VARCHAR', ['default' => 'none'])
             ->addColumn('ext_id', 'INTEGER', ['null' => false])
             ->addColumn('id', 'INTEGER', ['null' => false])
-            ->addForeignKey(['ext_id'], 'ext_test', ['id'], ['update' => 'NOT ACTION', 'delete' => 'CASCADE'])
+            ->addForeignKey(['ext_id'], 'ext_test', ['id'], ['update' => 'NO ACTION', 'delete' => 'CASCADE'])
             ->addIndex(['ext_id'])
             ->addIndex(['col1', 'col2'], ['unique' => true])
             ->primaryKey('id')
@@ -199,7 +206,7 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
             . "\t\"ext_id\" INTEGER NOT NULL,\n"
             . "\t\"id\" INTEGER NOT NULL,\n"
             . "\tPRIMARY KEY (\"id\"),\n"
-            . "\tCONSTRAINT \"fk_test_ext_id_ext_test_id\" FOREIGN KEY (\"ext_id\") REFERENCES \"ext_test\" (\"id\") ON DELETE CASCADE ON UPDATE NOT ACTION);\n"
+            . "\tCONSTRAINT \"fk_test_ext_id_ext_test_id\" FOREIGN KEY (\"ext_id\") REFERENCES \"ext_test\" (\"id\") ON DELETE CASCADE ON UPDATE NO ACTION);\n"
             . "CREATE INDEX \"test_ext_id_idx\" ON \"test\" (\"ext_id\");\n"
             . "CREATE UNIQUE INDEX \"test_col1_col2_idx\" ON \"test\" (\"col1\", \"col2\");\n");
         $this->assertEquals($mockPdo->getParams(), []);

@@ -26,6 +26,7 @@ class PdoException extends DbException
      */
     public function __construct(string $message, PDO $pdo, ?Throwable $previous = null)
     {
-        parent::__construct($message . implode(' ', $pdo->errorInfo()), $pdo->errorCode(), $previous);
+        $info = $pdo->errorInfo();
+        parent::__construct($message . implode(' ', $info), $info[1], $previous);
     }
 }

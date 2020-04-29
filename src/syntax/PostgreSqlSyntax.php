@@ -9,6 +9,8 @@ declare (strict_types=1);
 
 namespace kradwhite\db\syntax;
 
+use kradwhite\db\exception\BeforeQueryException;
+
 /**
  * Class PostgreSqlSyntax
  * @package kradwhite\db\syntax
@@ -35,24 +37,40 @@ class PostgreSqlSyntax extends SqlSyntax
      * @param array $primaryKeys
      * @param array $options
      * @return string
+     * @throws BeforeQueryException
      */
     public function createTable(string $table, array $columns, array $indexes, array $foreignKeys, array $primaryKeys, array $options): string
     {
-        $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)}";
-        if ($columnsToString = $this->columnsToString($columns)) {
-            $query .= "(\n$columnsToString";
-            if ($primaryKeys['columns']) {
-                $query .= ",\n\tPRIMARY KEY (" . implode(', ', $this->quotes($primaryKeys['columns'])) . ')';
-            }
-            foreach ($foreignKeys as $name => &$fk) {
-                $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
-            }
-            $query .= ");\n";
-            foreach ($indexes as $name => &$index) {
-                $query .= $this->createIndex($table, $index['columns'], $index['options'], $name);
-            }
+        if (!$columns) {
+            throw new BeforeQueryException("В таблице должна быть минимум 1 колонка");
         }
-        return $query . ";\n";
+        $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)} (\n{$this->columnsToString($columns)}";
+        if ($primaryKeys['columns']) {
+            $query .= ",\n\tPRIMARY KEY (" . implode(', ', $this->quotes($primaryKeys['columns'])) . ')';
+        }
+        foreach ($foreignKeys as $name => &$fk) {
+            $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
+        }
+        $query .= ");\n";
+        foreach ($indexes as $name => &$index) {
+            $query .= $this->createIndex($table, $index['columns'], $index['options'], $name) . ";\n";
+        }
+        return $query;
+    }
+
+    /**
+     * @param string $table
+     * @param string $name
+     * @param string $type
+     * @param array $options
+     * @return string
+     */
+    public function alterColumn(string $table, string $name, string $type, array $options = []): string
+    {
+        $prefix = "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)}";
+        return "$prefix TYPE {$this->columnType($type, $options)};\n"
+            . "$prefix " . (isset($options['null']) && $options['null'] ? "DROP" : "SET") . " NOT NULL;\n"
+            . "$prefix " . (isset($options['default']) ? "SET DEFAULT '{$options['default']}'" : "DROP DEFAULT;\n");
     }
 
     /**
@@ -127,7 +145,7 @@ class PostgreSqlSyntax extends SqlSyntax
      */
     public function quote(string $object): string
     {
-        return '"' . $object . '"';
+        return "\"$object\"";
     }
 
     /**

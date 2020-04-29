@@ -188,7 +188,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
             ->addColumn('col2', 'string', ['default' => 'none'])
             ->addColumn('ext_id', 'integer', ['null' => false])
             ->addColumn('id', 'auto', ['null' => false])
-            ->addForeignKey(['ext_id'], 'ext_test', ['id'], ['update' => 'NOT ACTION', 'delete' => 'CASCADE'])
+            ->addForeignKey(['ext_id'], 'ext_test', ['id'], ['update' => 'NO ACTION', 'delete' => 'CASCADE'])
             ->addIndex(['ext_id'])
             ->addIndex(['col1', 'col2'], ['unique' => true])
             ->primaryKey('id')
@@ -199,7 +199,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
             . "\t`ext_id` INTEGER NOT NULL,\n"
             . "\t`id` INT AUTO INCREMENT NOT NULL,\n"
             . "\tCONSTRAINT PRIMARY KEY USING BTREE (`id`),\n"
-            . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_id_ext_test_id` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NOT ACTION,\n"
+            . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_id_ext_test_id` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,\n"
             . "\tINDEX `test_ext_id_idx` USING BTREE (`ext_id`),\n"
             . "\tCONSTRAINT UNIQUE INDEX `test_col1_col2_idx` USING BTREE (`col1`, `col2`))\n");
         $this->assertEquals($mockPdo->getParams(), []);

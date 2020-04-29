@@ -33,12 +33,25 @@ trait StmtTrait
     protected function _prepareExecute(string $query, array $params = []): PDOStatement
     {
         if (!$stmt = $this->driver->getPdo()->prepare($query)) {
-            throw new PdoException("Ошибка подготовки запроса: " . $this->driver->getPdo()->errorInfo(), $this->driver->getPdo()->errorCode());
+            throw new PdoException("Ошибка подготовки запроса: ", $this->driver->getPdo());
         } else if (!$stmt->execute($params)) {
             throw new PdoStatementException("Ошика выполнения запроса: ", $stmt);
         } else {
             return $stmt;
         }
+    }
+
+    /**
+     * @param string $query
+     * @return int
+     * @throws PdoException
+     */
+    protected function _execute(string $query): int
+    {
+        if (($result = $this->driver->getPdo()->exec($query)) === false) {
+            throw new PdoException('Ошибка выполнения запроса: ', $this->driver->getPdo());
+        }
+        return $result;
     }
 
     /**

@@ -4,8 +4,10 @@ modules:
     - \Helper\PostgreSql
     - Asserts
     - Db:
-        dsn: 'pgsql:host=localhost;dbname=test;port=5434'
+        dsn: 'pgsql:host=localhost;dbname=test-1;port=5434'
         user: 'admin'
         password: 'admin'
         cleanup: true
+        populate: true
+        dump: 'tests/_data/postgre.sql'
   step_decorators: ~

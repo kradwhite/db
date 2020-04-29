@@ -1,27 +1,15 @@
 version: '3'
 services:
-  php:
-    build: ./docker/php
-    volumes:
-      - ./:/root/app
-    links:
-      - "mysql:database"
-      - "pgsql:database"
-    environment:
-      PHP_IDE_CONFIG: "serverName=Docker"
-    networks:
-      - internal
   mysql:
     image: mysql
+    restart: always
     ports:
       - "3308:3306"
     volumes:
       - ./docker/mysql/data/:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DB: test
-    networks:
-      - internal
+      MYSQL_DB: test-1
   pgsql:
     image: postgres
     restart: always
@@ -30,15 +18,6 @@ services:
     volumes:
       - ./docker/pgsql/data/:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: test
+      POSTGRES_DB: test-2
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-    networks:
-      - internal
-networks:
-  internal:
-    driver: "bridge"
-    ipam:
-      driver: default
-      config:
-        - subnet: 192.168.220.0/28
