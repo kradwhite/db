@@ -18,7 +18,7 @@ class TableTest extends \Codeception\Test\Unit
     protected function _before()
     {
         if (!$this->connection) {
-            $this->connection = new Connection(new PostgreSql('localhost', 'test-1', 'admin', 'admin', '5434'));
+            $this->connection = new Connection(new PostgreSql('localhost', 'test-2', 'admin', 'admin', '5434'));
         }
     }
 

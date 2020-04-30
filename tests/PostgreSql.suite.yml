@@ -4,7 +4,7 @@ modules:
     - \Helper\PostgreSql
     - Asserts
     - Db:
-        dsn: 'pgsql:host=localhost;dbname=test-1;port=5434'
+        dsn: 'pgsql:host=localhost;dbname=test-2;port=5434'
         user: 'admin'
         password: 'admin'
         cleanup: true
