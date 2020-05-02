@@ -74,6 +74,9 @@ class QueryBuilder
     /** @var array */
     private array $params = [];
 
+    /** @var array */
+    private array $types = [];
+
     /** @var int */
     private int $i = 0;
 
@@ -226,11 +229,12 @@ class QueryBuilder
      * @param string $field
      * @param string|int|float|bool $value
      * @param string $op
+     * @param string $type
      * @return QueryBuilder
      */
-    public function andWhere(string $field, $value, string $op = '='): QueryBuilder
+    public function andWhere(string $field, $value, string $op = '=', string $type = ''): QueryBuilder
     {
-        $this->where[] = ['AND', [$field, $op, $this->nextKey($value)]];
+        $this->where[] = ['AND', [$field, $op, $this->nextKey($value, $type)]];
         return $this;
     }
 
@@ -238,11 +242,12 @@ class QueryBuilder
      * @param string $field
      * @param string|int|float|bool $value
      * @param string $op
+     * @param string $type
      * @return QueryBuilder
      */
-    public function orWhere(string $field, $value, string $op = '='): QueryBuilder
+    public function orWhere(string $field, $value, string $op = '=', string $type = ''): QueryBuilder
     {
-        $this->where[] = ['OR', [$field, $op, $this->nextKey($value)]];
+        $this->where[] = ['OR', [$field, $op, $this->nextKey($value, $type)]];
         return $this;
     }
 
@@ -251,11 +256,12 @@ class QueryBuilder
      * @param $value
      * @param string $op
      * @param string $union
+     * @param string $type
      * @return QueryBuilder
      */
-    public function where(string $field, $value, string $op = '=', string $union = 'AND'): QueryBuilder
+    public function where(string $field, $value, string $op = '=', string $union = 'AND', string $type = ''): QueryBuilder
     {
-        $this->where[] = [strtoupper($union), [$field, $op, $this->nextKey($value)]];
+        $this->where[] = [strtoupper($union), [$field, $op, $this->nextKey($value, $type)]];
         return $this;
     }
 
@@ -263,11 +269,12 @@ class QueryBuilder
      * @param string $field
      * @param array $values
      * @param string $union
+     * @param string $type
      * @return QueryBuilder
      */
-    public function whereIn(string $field, array $values, string $union = 'AND'): QueryBuilder
+    public function whereIn(string $field, array $values, string $union = 'AND', string $type = ''): QueryBuilder
     {
-        $this->where[] = [strtoupper($union), [$field, 'IN', '(' . implode(', ', $this->nextKeys($values)) . ')']];
+        $this->where[] = [strtoupper($union), [$field, 'IN', '(' . implode(', ', $this->nextKeys($values, $type)) . ')']];
         return $this;
     }
 
@@ -275,11 +282,12 @@ class QueryBuilder
      * @param string $field
      * @param array $values
      * @param string $union
+     * @param string $type
      * @return QueryBuilder
      */
-    public function whereNotIn(string $field, array $values, string $union = 'AND'): QueryBuilder
+    public function whereNotIn(string $field, array $values, string $union = 'AND', string $type = ''): QueryBuilder
     {
-        $this->where[] = [strtoupper($union), [$field, 'NOT IN', '(' . implode(', ', $this->nextKeys($values)) . ')']];
+        $this->where[] = [strtoupper($union), [$field, 'NOT IN', '(' . implode(', ', $this->nextKeys($values, $type)) . ')']];
         return $this;
     }
 
@@ -327,11 +335,12 @@ class QueryBuilder
      * @param string $field
      * @param string $value
      * @param string $union
+     * @param string $type
      * @return QueryBuilder
      */
-    public function whereLike(string $field, string $value, string $union = 'AND'): QueryBuilder
+    public function whereLike(string $field, string $value, string $union = 'AND', string $type = ''): QueryBuilder
     {
-        $this->where[] = [strtoupper($union), [$field, 'LIKE', $this->nextKey($value)]];
+        $this->where[] = [strtoupper($union), [$field, 'LIKE', $this->nextKey($value, $type)]];
         return $this;
     }
 
@@ -339,11 +348,12 @@ class QueryBuilder
      * @param string $field
      * @param string $value
      * @param string $union
+     * @param string $type
      * @return QueryBuilder
      */
-    public function whereNotLike(string $field, string $value, string $union = 'AND'): QueryBuilder
+    public function whereNotLike(string $field, string $value, string $union = 'AND', string $type = ''): QueryBuilder
     {
-        $this->where[] = [strtoupper($union), [$field, 'NOT LIKE', $this->nextKey($value)]];
+        $this->where[] = [strtoupper($union), [$field, 'NOT LIKE', $this->nextKey($value, $type)]];
         return $this;
     }
 
@@ -351,10 +361,12 @@ class QueryBuilder
      * @param string $condition
      * @param array $params
      * @param string $union
+     * @param array $types
      * @return QueryBuilder
      */
-    public function whereString(string $condition, array $params = [], string $union = 'AND'): QueryBuilder
+    public function whereString(string $condition, array $params = [], string $union = 'AND', array $types = []): QueryBuilder
     {
+        $this->types += $types;
         $this->params += $params;
         $this->where[] = [strtoupper($union), [$condition]];
         return $this;
@@ -432,21 +444,20 @@ class QueryBuilder
     /**
      * @param string $fetch
      * @param string $style
-     * @param int $column
      * @return array
      * @throws BeforeQueryException
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareExecute(string $fetch = 'fetch', string $style = 'assoc', int $column = 0): array
+    public function prepareExecute(string $fetch = 'fetch', string $style = 'assoc'): array
     {
-        $stmt = $this->_prepareExecute($this->buildQuery(), $this->params);
+        $stmt = $this->_prepareExecute($this->buildQuery(), $this->params, $this->types);
         if ($fetch == 'fetch') {
             $result = $stmt->fetch($style);
         } else if ($fetch == 'all') {
             $result = $stmt->fetchAll($style);
         } else if ($fetch == 'column') {
-            $result = $stmt->fetchColumn($column);
+            $result = $stmt->fetchColumn((int)$style);
         } else {
             throw new BeforeQueryException("Допустимые значения 1 аргумента: fetch | all | column");
         }
@@ -514,24 +525,30 @@ class QueryBuilder
 
     /**
      * @param string|int|float|bool
+     * @param string $type
      * @return string
      */
-    private function nextKey($value): string
+    private function nextKey($value, string $type = ''): string
     {
         $key = "c_" . $this->i++;
         $this->params[$key] = $value;
-        return ":$key";
+        $result = ":$key";
+        if ($type) {
+            $this->params[$result] = $type;
+        }
+        return $result;
     }
 
     /**
      * @param array $values
+     * @param string $type
      * @return array
      */
-    private function nextKeys(array $values): array
+    private function nextKeys(array &$values, string $type): array
     {
         $keys = [];
-        foreach ($values as &$value) {
-            $keys[] = $this->nextKey($value);
+        foreach ($values as $name => &$value) {
+            $keys[] = $this->nextKey($value, $type);
         }
         return $keys;
     }

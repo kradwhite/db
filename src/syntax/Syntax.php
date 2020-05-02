@@ -31,7 +31,7 @@ interface Syntax
      * @param string $value
      * @return string
      */
-    public function valueQuote(string $value): string;
+    public function stringQuote(string $value): string;
 
     /**
      * @param string $table
@@ -145,17 +145,16 @@ interface Syntax
      * @param string $name
      * @param string $table
      * @param array $columns
+     * @param array $options
      * @return string
      */
-    public function buildIndexName(string $name, string $table, array $columns): string;
+    public function buildIndexName(string $name, string $table, array $columns, array $options): string;
 
     /**
      * @param string $name
      * @param string $table
-     * @param array $columns
      * @param string $table2
-     * @param array $columns2
      * @return string
      */
-    public function buildForeignKeyName(string $name, string $table, array $columns, string $table2, array $columns2): string;
+    public function buildForeignKeyName(string $name, string $table, string $table2): string;
 }

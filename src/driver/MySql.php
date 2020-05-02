@@ -25,11 +25,10 @@ class MySql extends Sql
     public function getPdo(): PDO
     {
         if (!$this->pdo) {
-            $dbName = $this->quote($this->dbName);
             if (!$this->port) {
                 $this->port = '3306';
             }
-            $this->pdo = new PDO("mysql:host={$this->host};port={$this->port};dbname={$dbName}", $this->user, $this->password, $this->options);
+            $this->pdo = new PDO("mysql:host={$this->host};dbname={$this->dbName};port={$this->port}", $this->user, $this->password, $this->options);
         }
         return $this->pdo;
     }

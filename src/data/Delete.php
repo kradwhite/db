@@ -20,17 +20,6 @@ use kradwhite\db\exception\PdoStatementException;
 class Delete extends DataQuery
 {
     /**
-     * Delete constructor.
-     * @param string $table
-     * @param array $condition
-     * @param Driver $driver
-     */
-    public function __construct(string $table, array $condition, Driver $driver)
-    {
-        parent::__construct($table, [], $condition, $driver);
-    }
-
-    /**
      * @return int
      * @throws PdoException
      * @throws PdoStatementException
@@ -41,6 +30,7 @@ class Delete extends DataQuery
         foreach ($this->condition as $name => &$value) {
             $condition[] = "{$this->driver->quote($name)}=:$name";
         }
-        return $this->_prepareExecute("DELETE FROM {$this->table} WHERE " . implode(' AND ', $condition), $this->condition)->rowCount();
+        $query = "DELETE FROM {$this->table} WHERE " . implode(' AND ', $condition);
+        return $this->_prepareExecute($query, $this->condition, $this->types)->rowCount();
     }
 }

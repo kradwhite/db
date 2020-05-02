@@ -76,7 +76,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testAddCompositeIndex()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление индекса `test_col_col2_idx`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление индекса `uq_test_col_col2_idx`"), function () {
             $table = $this->getTable();
             $table->addIndex(['col', 'col2'], ['unique' => true]);
             $table->addIndex(['col', 'col2'], ['unique' => true]);
@@ -88,7 +88,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $table = $this->getTable();
         $table->createIndex(['col1', 'col2'], ['unique' => true, 'not_exist' => true]);
-        $this->assertEquals($mockPdo->getQuery(), "CREATE UNIQUE INDEX IF NOT EXIST `test_col1_col2_idx` ON `test` (`col1`, `col2`)");
+        $this->assertEquals($mockPdo->getQuery(), "CREATE UNIQUE INDEX IF NOT EXISTS `uq_test_col1_col2_idx` ON `test` (`col1`, `col2`)");
         $this->assertEquals($mockPdo->getParams(), []);
     }
 
@@ -112,7 +112,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testAddForeignKey()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление внешнего ключа `fk_test_ext_id_ext_id2_ext_id_id2`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление внешнего ключа `fk_test_ext`"), function () {
             $table = $this->getTable();
             $table->addForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2'], ['delete' => 'CASCADE', 'update' => 'CASCADE']);
             $table->addForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2']);
@@ -124,7 +124,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $table = $this->getTable();
         $table->createForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2'], ['delete' => 'CASCADE', 'update' => 'CASCADE']);
-        $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE `test` ADD CONSTRAINT FOREIGN KEY `fk_test_ext_id_ext_id2_ext_id_id2` (`ext_id`, `ext_id2`) "
+        $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE `test` ADD CONSTRAINT FOREIGN KEY `fk_test_ext` (`ext_id`, `ext_id2`) "
             . "REFERENCES `ext` (`id`, `id2`) ON DELETE CASCADE ON UPDATE CASCADE");
         $this->assertEquals($mockPdo->getParams(), []);
     }
@@ -199,9 +199,9 @@ class MySqlTableTest extends \Codeception\Test\Unit
             . "\t`ext_id` INTEGER NOT NULL,\n"
             . "\t`id` INT AUTO INCREMENT NOT NULL,\n"
             . "\tCONSTRAINT PRIMARY KEY USING BTREE (`id`),\n"
-            . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_id_ext_test_id` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,\n"
+            . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_test` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,\n"
             . "\tINDEX `test_ext_id_idx` USING BTREE (`ext_id`),\n"
-            . "\tCONSTRAINT UNIQUE INDEX `test_col1_col2_idx` USING BTREE (`col1`, `col2`))\n");
+            . "\tCONSTRAINT UNIQUE INDEX `uq_test_col1_col2_idx` USING BTREE (`col1`, `col2`))\n");
         $this->assertEquals($mockPdo->getParams(), []);
     }
 }

@@ -31,7 +31,8 @@ class SelectOne extends DataQuery
         foreach ($this->condition as $name => &$value) {
             $condition[] = "{$this->driver->quote($name)}=:$name";
         }
-        $stmt = $this->_prepareExecute("SELECT $fields FROM {$this->table} WHERE " . implode(' AND ', $condition) . " LIMIT 1", $this->condition);
+        $query = "SELECT $fields FROM {$this->table} WHERE " . implode(' AND ', $condition) . " LIMIT 1";
+        $stmt = $this->_prepareExecute($query, $this->condition, $this->types);
         $data = $stmt->fetch($style);
         $this->closeCursor($stmt);
         return $data;

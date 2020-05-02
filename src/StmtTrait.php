@@ -26,15 +26,26 @@ trait StmtTrait
     /**
      * @param string $query
      * @param array $params
+     * @param array $types
      * @return PDOStatement
      * @throws PdoException
      * @throws PdoStatementException
      */
-    protected function _prepareExecute(string $query, array $params = []): PDOStatement
+    protected function _prepareExecute(string $query, array $params = [], array $types = []): PDOStatement
     {
         if (!$stmt = $this->driver->getPdo()->prepare($query)) {
             throw new PdoException("Ошибка подготовки запроса: ", $this->driver->getPdo());
-        } else if (!$stmt->execute($params)) {
+        }
+        foreach ($types as $name => $type) {
+            if ($type == 'bool') {
+                $params[$name] = $params[$name] ? 'true' : 'false';
+            } else if ($type == 'int') {
+                $params[$name] = (int)$params[$name];
+            } else if ($type == 'string') {
+                $params[$name] = (string)$params[$name];
+            }
+        }
+        if (!$stmt->execute($params)) {
             throw new PdoStatementException("Ошика выполнения запроса: ", $stmt);
         } else {
             return $stmt;

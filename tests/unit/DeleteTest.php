@@ -24,7 +24,7 @@ class DeleteTest extends \Codeception\Test\Unit
     {
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $condition = ['col1' => 33, 'col2' => 'value33'];
-        $delete = new Delete('test', $condition, $this->tester->mysqlDriver());
+        $delete = new Delete('test', [], $condition, [], $this->tester->mysqlDriver());
         $delete->prepareExecute();
         $this->assertEquals('DELETE FROM `test` WHERE `col1`=:col1 AND `col2`=:col2', $mockPdo->getQuery());
         $this->assertEquals($condition, $mockPdo->getParams());

@@ -40,90 +40,98 @@ class Connection
     /**
      * @param string $table
      * @param array $attributes
+     * @param array $types
      * @return data\Insert
      */
-    public function insert(string $table, array $attributes): Insert
+    public function insert(string $table, array $attributes, array $types = []): Insert
     {
-        return new Insert($table, $attributes, $this->driver);
+        return new Insert($table, $attributes, [], $types, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $fields
      * @param array $attributes
+     * @param array $types
      * @return InsertMultiple
      */
-    public function insertMultiple(string $table, array $fields, array $attributes): InsertMultiple
+    public function insertMultiple(string $table, array $fields, array $attributes, array $types = []): InsertMultiple
     {
-        return new InsertMultiple($table, $attributes, $fields, $this->driver);
+        return new InsertMultiple($table, $attributes, $fields, $types, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $attributes
      * @param array $condition
+     * @param array $types
      * @return Update
      */
-    public function update(string $table, array $attributes, array $condition): Update
+    public function update(string $table, array $attributes, array $condition, array $types = []): Update
     {
-        return new Update($table, $attributes, $condition, $this->driver);
+        return new Update($table, $attributes, $condition, $types, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $condition
+     * @param array $types
      * @return Delete
      */
-    public function delete(string $table, array $condition): Delete
+    public function delete(string $table, array $condition, array $types = []): Delete
     {
-        return new Delete($table, $condition, $this->driver);
+        return new Delete($table, [], $condition, $types, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $fields
      * @param array $condition
+     * @param array $types
      * @return SelectOne
      */
-    public function selectOne(string $table, array $fields, array $condition): SelectOne
+    public function selectOne(string $table, array $fields, array $condition, array $types = []): SelectOne
     {
-        return new SelectOne($table, $fields, $condition, $this->driver);
+        return new SelectOne($table, $fields, $condition, $types, $this->driver);
     }
 
     /**
      * @param string $table
      * @param array $fields
      * @param array $condition
+     * @param array $types
      * @return SelectMultiple
      */
-    public function selectMultiple(string $table, array $fields, array $condition): SelectMultiple
+    public function selectMultiple(string $table, array $fields, array $condition, array $types = []): SelectMultiple
     {
-        return new SelectMultiple($table, $fields, $condition, $this->driver);
+        return new SelectMultiple($table, $fields, $condition, $types, $this->driver);
     }
 
     /**
      * @param string $query
      * @param array $params
+     * @param array $types
      * @return int
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareExecute(string $query, array $params = []): int
+    public function prepareExecute(string $query, array $params = [], array $types = []): int
     {
-        return $this->_prepareExecute($query, $params)->rowCount();
+        return $this->_prepareExecute($query, $params, $types)->rowCount();
     }
 
     /**
      * @param string $query
      * @param array $params
      * @param string $style
+     * @param array $types
      * @return array
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareQuery(string $query, array $params = [], string $style = 'assoc'): array
+    public function prepareQuery(string $query, array $params = [], string $style = 'assoc', array $types = []): array
     {
-        $stmt = $this->_prepareExecute($query, $params);
+        $stmt = $this->_prepareExecute($query, $params, $types);
         $result = $stmt->fetch($style);
         $this->closeCursor($stmt);
         return $result;
@@ -133,13 +141,14 @@ class Connection
      * @param string $query
      * @param array $params
      * @param string $style
+     * @param array $types
      * @return array
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareQueryMultiple(string $query, array $params = [], string $style = 'assoc'): array
+    public function prepareQueryMultiple(string $query, array $params = [], string $style = 'assoc', array $types = []): array
     {
-        $stmt = $this->_prepareExecute($query, $params);
+        $stmt = $this->_prepareExecute($query, $params, $types);
         $result = $stmt->fetchAll($style);
         $this->closeCursor($stmt);
         return $result;
@@ -149,13 +158,14 @@ class Connection
      * @param string $query
      * @param array $params
      * @param int $column
+     * @param array $types
      * @return array
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareQueryColumn(string $query, array $params = [], int $column = 0): array
+    public function prepareQueryColumn(string $query, array $params = [], int $column = 0, array $types = []): array
     {
-        $stmt = $this->_prepareExecute($query, $params);
+        $stmt = $this->_prepareExecute($query, $params, $types);
         $result = $stmt->fetchColumn($column);
         $this->closeCursor($stmt);
         return $result;

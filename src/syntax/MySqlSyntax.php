@@ -85,6 +85,17 @@ class MySqlSyntax extends SqlSyntax
      * @param string $newName
      * @return string
      */
+    public function renameColumn(string $table, string $oldName, string $newName): string
+    {
+        return "ALTER TABLE {$this->quote($table)} RENAME COLUMN {$this->quote($oldName)} TO {$this->quote($newName)}";
+    }
+
+    /**
+     * @param string $table
+     * @param string $oldName
+     * @param string $newName
+     * @return string
+     */
     public function renameIndex(string $table, string $oldName, string $newName): string
     {
         return "ALTER TABLE {$this->quote($table)} RENAME INDEX {$this->quote($oldName)} TO {$this->quote($newName)}";

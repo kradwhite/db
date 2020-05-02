@@ -1,5 +1,4 @@
 <?php
-
 namespace Helper;
 
 // here you can define custom actions
@@ -7,7 +6,7 @@ namespace Helper;
 
 use kradwhite\db\Connection;
 
-class PostgreSql extends \Codeception\Module
+class MySql extends \Codeception\Module
 {
     /** @var Connection */
     private ?Connection $conn = null;
@@ -18,7 +17,7 @@ class PostgreSql extends \Codeception\Module
     public function conn(): Connection
     {
         if (!$this->conn) {
-            $this->conn = new Connection(new \kradwhite\db\driver\PostgreSql('localhost', 'test-2', 'admin', 'admin', '5432'));
+            $this->conn = new Connection(new \kradwhite\db\driver\MySql('0.0.0.0', 'test-1', 'admin', 'admin', '3306'));
         }
         return $this->conn;
     }

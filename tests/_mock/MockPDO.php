@@ -79,4 +79,15 @@ class MockPDO extends PDO
     {
         return $this->params;
     }
+
+    /**
+     * @param string $statement
+     * @return false|int
+     */
+    public function exec($statement)
+    {
+        $this->query = $statement;
+        $this->params = [];
+        return 1;
+    }
 }

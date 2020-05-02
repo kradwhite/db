@@ -1,17 +1,11 @@
-<?php
-
-namespace kradwhite\tests\PostgreSql;
-
-use kradwhite\db\Connection;
-use kradwhite\db\driver\PostgreSql;
-
+<?php 
 class TableTest extends \Codeception\Test\Unit
 {
     /**
-     * @var \PostgreSqlTester
+     * @var \MySqlTester
      */
     protected $tester;
-
+    
     protected function _before()
     {
     }
@@ -21,7 +15,7 @@ class TableTest extends \Codeception\Test\Unit
     }
 
     // tests
-    public function testCreate()
+    public function testCreateTable()
     {
         $this->tester->conn()->table('test_create_table-2')
             ->addColumn('col1', 'INTEGER', ['null' => false])
@@ -50,7 +44,7 @@ class TableTest extends \Codeception\Test\Unit
     public function testRenameColumn()
     {
         $this->tester->conn()->table('test_rename_column')
-            ->renameColumn('col1', 'col3434');
+            ->renameColumn('col1', 'new_col_name');
     }
 
     public function testDropColumn()
@@ -82,12 +76,6 @@ class TableTest extends \Codeception\Test\Unit
     {
         $this->tester->conn()->table('test_create_foreign_key_target')
             ->createForeignKey(['source_id'], 'test_create_foreign_key_source', ['id'], ['update' => 'CASCADE', 'remove' => 'CASCADE']);
-    }
-
-    public function testRenameForeignKey()
-    {
-        $this->tester->conn()->table('test_rename_foreign_key_target')
-            ->renameForeignKey('fk_test_rename_foreign_key_target_source_id', 'new_name');
     }
 
     public function testDropForeignKey()

@@ -41,7 +41,7 @@ class SelectMultiple extends DataQuery
         if ($limit) {
             $query .= " LIMIT $limit";
         }
-        $stmt = $this->_prepareExecute($query, $this->condition);
+        $stmt = $this->_prepareExecute($query, $this->condition, $this->types);
         $data = $stmt->fetchAll($style);
         $this->closeCursor($stmt);
         return $data;

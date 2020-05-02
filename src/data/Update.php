@@ -20,18 +20,6 @@ use kradwhite\db\exception\PdoStatementException;
 class Update extends DataQuery
 {
     /**
-     * Update constructor.
-     * @param string $table
-     * @param array $attributes
-     * @param array $condition
-     * @param Driver $driver
-     */
-    public function __construct(string $table, array $attributes, array $condition, Driver $driver)
-    {
-        parent::__construct($table, $attributes, $condition, $driver);
-    }
-
-    /**
      * @return int
      * @throws PdoException
      * @throws PdoStatementException
@@ -41,6 +29,7 @@ class Update extends DataQuery
         $query = "UPDATE {$this->table} SET ";
         $fields = [];
         $params = [];
+        $types = [];
         foreach ($this->attributes as $name => &$value) {
             $fields[] = "{$this->driver->quote($name)}=:$name";
             $params[$name] = $value;
@@ -48,8 +37,12 @@ class Update extends DataQuery
         $where = [];
         foreach ($this->condition as $name => &$value) {
             $where[] = "{$this->driver->quote($name)}=:c_$name";
-            $params["c_$name"] = $value;
+            $params[":c_$name"] = $value;
+            if (isset($this->types[$name])) {
+                $types[":c$name"] = $this->types[$name];
+            }
         }
-        return $this->_prepareExecute($query . implode(', ', $fields) . " WHERE " . implode(' AND ', $where), $params)->rowCount();
+        $query .= implode(', ', $fields) . " WHERE " . implode(' AND ', $where);
+        return $this->_prepareExecute($query, $params, $types)->rowCount();
     }
 }

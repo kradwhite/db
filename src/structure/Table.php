@@ -132,7 +132,7 @@ class Table
      */
     public function addIndex(array $columns, array $options = [], string $name = ''): Table
     {
-        $name = $this->getSyntax()->buildIndexName($name, $this->table, $columns);
+        $name = $this->getSyntax()->buildIndexName($name, $this->table, $columns, $options);
         if (isset($this->indexes[$name])) {
             throw new BeforeQueryException("Повторное добавление индекса {$this->quote($name)}");
         }
@@ -187,7 +187,7 @@ class Table
      */
     public function addForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
-        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $columns, $table, $columns2);
+        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $table);
         if (isset($this->foreignKeys[$name])) {
             throw new BeforeQueryException("Повторное добавление внешнего ключа {$this->quote($name)}");
         }
@@ -206,7 +206,7 @@ class Table
      */
     public function createForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
-        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $columns, $table, $columns2);
+        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $table);
         $this->_execute($this->getSyntax()->createForeignKey($name, $this->table, $columns, $table, $columns2, $options));
         return $this;
     }
@@ -296,26 +296,28 @@ class Table
 
     /**
      * @param array $attributes
+     * @param array $types
      * @return Table
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function insert(array $attributes): Table
+    public function insert(array $attributes, array $types = []): Table
     {
-        (new Insert($this->table, $attributes, $this->driver))->prepareExecute();
+        (new Insert($this->table, $attributes, [], $types, $this->driver))->prepareExecute();
         return $this;
     }
 
     /**
      * @param array $attributes
      * @param array $fields
+     * @param array $types
      * @return Table
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function insertMultiple(array $attributes, array $fields): Table
+    public function insertMultiple(array $attributes, array $fields, array $types = []): Table
     {
-        (new InsertMultiple($this->table, $attributes, $fields, $this->driver))->prepareExecute();
+        (new InsertMultiple($this->table, $attributes, $fields, $types, $this->driver))->prepareExecute();
         return $this;
     }
 

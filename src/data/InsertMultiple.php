@@ -20,23 +20,12 @@ use kradwhite\db\exception\PdoStatementException;
 class InsertMultiple extends DataQuery
 {
     /**
-     * InsertMultiple constructor.
-     * @param string $table
-     * @param array $attributes
-     * @param array $fields
-     * @param Driver $driver
-     */
-    public function __construct(string $table, array $attributes, array $fields, Driver $driver)
-    {
-        parent::__construct($table, $attributes, $fields, $driver);
-    }
-
-    /**
+     * @param array $types
      * @return void
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareExecute()
+    public function prepareExecute(array $types = [])
     {
         $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($this->condition)) . ") VALUES ";
         $attributes = [];
@@ -50,6 +39,6 @@ class InsertMultiple extends DataQuery
             }
             $rows[] = "(" . implode(', ', $row) . ")";
         }
-        $this->_prepareExecute($query . implode("\n,", $rows), $attributes);
+        $this->_prepareExecute($query . implode("\n,", $rows), $attributes, $this->types);
     }
 }

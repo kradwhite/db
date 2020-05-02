@@ -53,17 +53,6 @@ abstract class SqlSyntax implements Syntax
 
     /**
      * @param string $table
-     * @param string $oldName
-     * @param string $newName
-     * @return string
-     */
-    public function renameColumn(string $table, string $oldName, string $newName): string
-    {
-        return "ALTER TABLE {$this->quote($table)} RENAME COLUMN {$this->quote($oldName)} TO {$this->quote($newName)}";
-    }
-
-    /**
-     * @param string $table
      * @param string $name
      * @param array $options
      * @return string
@@ -83,7 +72,7 @@ abstract class SqlSyntax implements Syntax
     public function createIndex(string $table, array $columns, array $options = [], string $name = ''): string
     {
         $query = "CREATE{$this->uniqueOption($options)} INDEX{$this->notExistOption($options)}";
-        $name = $this->buildIndexName($name, $table, $columns);
+        $name = $this->buildIndexName($name, $table, $columns, $options);
         $query .= " {$this->quote($name)} ON {$this->quote($table)} (" . implode(', ', $this->quotes($columns)) . ')';
         return $query;
     }
@@ -92,7 +81,7 @@ abstract class SqlSyntax implements Syntax
      * @param string|int|float|bool|null $value
      * @return string
      */
-    public function valueQuote($value): string
+    public function stringQuote($value): string
     {
         return is_string($value) ? "'$value'" : (string)$value;
     }
@@ -114,24 +103,24 @@ abstract class SqlSyntax implements Syntax
      * @param string $name
      * @param string $table
      * @param array $columns
+     * @param array $options
      * @return string
      */
-    public function buildIndexName(string $name, string $table, array $columns): string
+    public function buildIndexName(string $name, string $table, array $columns, array $options): string
     {
-        return $name ? $name : $table . '_' . implode('_', $columns) . '_idx';
+        $uqPrefix = isset($options['unique']) && $options['unique'] ? 'uq_' : '';
+        return $name ? $name : $uqPrefix . $table . '_' . implode('_', $columns) . '_idx';
     }
 
     /**
      * @param string $name
      * @param string $table
-     * @param array $columns
      * @param string $table2
-     * @param array $columns2
      * @return string
      */
-    public function buildForeignKeyName(string $name, string $table, array $columns, string $table2, array $columns2): string
+    public function buildForeignKeyName(string $name, string $table, string $table2): string
     {
-        return $name ? $name : 'fk_' . $table . '_' . implode('_', $columns) . '_' . $table2 . '_' . implode('_', $columns2);
+        return $name ? $name : 'fk_' . $table . '_' . $table2;
     }
 
     /**
@@ -159,7 +148,7 @@ abstract class SqlSyntax implements Syntax
      */
     protected function defaultOption(array &$options): string
     {
-        return isset($options['default']) ? " DEFAULT {$this->valueQuote($options['default'])}" : '';
+        return isset($options['default']) ? " DEFAULT {$this->stringQuote($options['default'])}" : '';
     }
 
     /**
@@ -186,7 +175,7 @@ abstract class SqlSyntax implements Syntax
      */
     protected function notExistOption(array &$options): string
     {
-        return isset($options['not_exist']) && $options['not_exist'] ? ' IF NOT EXIST' : '';
+        return isset($options['not_exist']) && $options['not_exist'] ? ' IF NOT EXISTS' : '';
     }
 
     /**

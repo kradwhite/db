@@ -70,7 +70,18 @@ class PostgreSqlSyntax extends SqlSyntax
         $prefix = "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)}";
         return "$prefix TYPE {$this->columnType($type, $options)};\n"
             . "$prefix " . (isset($options['null']) && $options['null'] ? "DROP" : "SET") . " NOT NULL;\n"
-            . "$prefix " . (isset($options['default']) ? "SET DEFAULT '{$options['default']}'" : "DROP DEFAULT;\n");
+            . "$prefix " . (isset($options['default']) ? "SET DEFAULT '{$options['default']}'" : "DROP DEFAULT") . ";\n";
+    }
+
+    /**
+     * @param string $table
+     * @param string $oldName
+     * @param string $newName
+     * @return string
+     */
+    public function renameColumn(string $table, string $oldName, string $newName): string
+    {
+        return "ALTER TABLE {$this->quote($table)} RENAME COLUMN {$this->quote($oldName)} TO {$this->quote($newName)}";
     }
 
     /**

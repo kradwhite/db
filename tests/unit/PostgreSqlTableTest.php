@@ -50,7 +50,9 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
         $mockPdo = $this->tester->pgsqlDriver()->getPdo();
         $table = $this->getTable();
         $table->alterColumn('col', 'BIGINT', ['null' => true, 'limit' => 15, 'default' => 1000]);
-        $this->assertEquals($mockPdo->getQuery(), 'ALTER TABLE "test" ALTER COLUMN "col" BIGINT(15) DEFAULT 1000 NULL');
+        $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE \"test\" ALTER COLUMN \"col\" TYPE BIGINT(15);\n"
+            . "ALTER TABLE \"test\" ALTER COLUMN \"col\" DROP NOT NULL;\n"
+            . "ALTER TABLE \"test\" ALTER COLUMN \"col\" SET DEFAULT '1000';\n");
         $this->assertEquals($mockPdo->getParams(), []);
     }
 
@@ -74,7 +76,7 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
 
     public function testAddCompositeIndex()
     {
-        $this->tester->expectThrowable(new BeforeQueryException('Повторное добавление индекса "test_col_col2_idx"'), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('Повторное добавление индекса "uq_test_col_col2_idx"'), function () {
             $table = $this->getTable();
             $table->addIndex(['col', 'col2'], ['unique' => true]);
             $table->addIndex(['col', 'col2'], ['unique' => true]);
@@ -86,7 +88,7 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
         $mockPdo = $this->tester->pgsqlDriver()->getPdo();
         $table = $this->getTable();
         $table->createIndex(['col1', 'col2'], ['unique' => true, 'not_exist' => true]);
-        $this->assertEquals($mockPdo->getQuery(), 'CREATE UNIQUE INDEX IF NOT EXIST "test_col1_col2_idx" ON "test" ("col1", "col2")');
+        $this->assertEquals($mockPdo->getQuery(), 'CREATE UNIQUE INDEX IF NOT EXISTS "uq_test_col1_col2_idx" ON "test" ("col1", "col2")');
         $this->assertEquals($mockPdo->getParams(), []);
     }
 
@@ -110,7 +112,7 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
 
     public function testAddForeignKey()
     {
-        $this->tester->expectThrowable(new BeforeQueryException('Повторное добавление внешнего ключа "fk_test_ext_id_ext_id2_ext_id_id2"'), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('Повторное добавление внешнего ключа "fk_test_ext"'), function () {
             $table = $this->getTable();
             $table->addForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2'], ['delete' => 'CASCADE', 'update' => 'CASCADE']);
             $table->addForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2']);
@@ -122,7 +124,7 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
         $mockPdo = $this->tester->pgsqlDriver()->getPdo();
         $table = $this->getTable();
         $table->createForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2'], ['delete' => 'CASCADE', 'update' => 'CASCADE']);
-        $this->assertEquals($mockPdo->getQuery(), 'ALTER TABLE "test" ADD CONSTRAINT "fk_test_ext_id_ext_id2_ext_id_id2" FOREIGN KEY ("ext_id", "ext_id2") '
+        $this->assertEquals($mockPdo->getQuery(), 'ALTER TABLE "test" ADD CONSTRAINT "fk_test_ext" FOREIGN KEY ("ext_id", "ext_id2") '
             . 'REFERENCES "ext" ("id", "id2") ON DELETE CASCADE ON UPDATE CASCADE');
         $this->assertEquals($mockPdo->getParams(), []);
     }
@@ -206,9 +208,9 @@ class PostgreSqlTableTest extends \Codeception\Test\Unit
             . "\t\"ext_id\" INTEGER NOT NULL,\n"
             . "\t\"id\" INTEGER NOT NULL,\n"
             . "\tPRIMARY KEY (\"id\"),\n"
-            . "\tCONSTRAINT \"fk_test_ext_id_ext_test_id\" FOREIGN KEY (\"ext_id\") REFERENCES \"ext_test\" (\"id\") ON DELETE CASCADE ON UPDATE NO ACTION);\n"
+            . "\tCONSTRAINT \"fk_test_ext_test\" FOREIGN KEY (\"ext_id\") REFERENCES \"ext_test\" (\"id\") ON DELETE CASCADE ON UPDATE NO ACTION);\n"
             . "CREATE INDEX \"test_ext_id_idx\" ON \"test\" (\"ext_id\");\n"
-            . "CREATE UNIQUE INDEX \"test_col1_col2_idx\" ON \"test\" (\"col1\", \"col2\");\n");
+            . "CREATE UNIQUE INDEX \"uq_test_col1_col2_idx\" ON \"test\" (\"col1\", \"col2\");\n");
         $this->assertEquals($mockPdo->getParams(), []);
     }
 }

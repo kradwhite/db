@@ -1,13 +1,13 @@
-actor: PostgreSqlTester
+actor: MySqlTester
 modules:
   enabled:
-    - \Helper\PostgreSql
+    - \Helper\MySql
     - Asserts
     - Db:
-        dsn: 'pgsql:host=localhost;dbname=test-2;port=5432'
+        dsn: 'mysql:host=0.0.0.0;dbname=test-1;port=3306'
         user: 'admin'
         password: 'admin'
         cleanup: true
         populate: true
-        dump: 'tests/_data/postgre.sql'
+        dump: 'tests/_data/my.sql'
   step_decorators: ~

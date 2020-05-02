@@ -20,17 +20,6 @@ use kradwhite\db\exception\PdoStatementException;
 class Insert extends DataQuery
 {
     /**
-     * Insert constructor.
-     * @param string $table
-     * @param array $attributes
-     * @param Driver $driver
-     */
-    public function __construct(string $table, array $attributes, Driver $driver)
-    {
-        parent::__construct($table, $attributes, [], $driver);
-    }
-
-    /**
      * @param string|null $sequence
      * @return string
      * @throws PdoException
@@ -41,9 +30,9 @@ class Insert extends DataQuery
         $fieldNames = array_keys($this->attributes);
         $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($fieldNames)) . ") VALUES (";
         for ($i = 0; $i < count($fieldNames); ++$i) {
-            $fieldNames[$i] = ':' . $fieldNames[$i];
+            $fieldNames[$i] = ":{$fieldNames[$i]}";
         }
-        $this->_prepareExecute($query . implode(', ', $fieldNames) . ")", $this->attributes);
+        $this->_prepareExecute($query . implode(', ', $fieldNames) . ")", $this->attributes, $this->types);
         return $this->driver->getPdo()->lastInsertId($sequence);
     }
 }

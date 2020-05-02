@@ -1,25 +1,30 @@
 version: '3'
 services:
   mysql:
-    image: mysql
+    image: mysql:8.0
     restart: always
     ports:
-      - "3308:3306"
+      - 3306:3306
     volumes:
-      - ./docker/mysql/data/:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_DATABASE: test-1
-      MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE=test-1
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin
   pgsql:
-    image: postgres
+    image: postgres:12
     restart: always
     ports:
-      - "5434:5432"
+      - 5432:5432
     volumes:
-      - ./docker/pgsql/data/:/var/lib/postgresql/data
+      - postgresql-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: test-2
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=test-2
+volumes:
+  mysql-data:
+    external: false
+  postgresql-data:
+    external: false
