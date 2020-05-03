@@ -34,12 +34,12 @@ CREATE TABLE `test_create_foreign_key_target` (`source_id` integer not null);
 CREATE TABLE `test_rename_foreign_key_source` (`id` integer primary key not null);
 CREATE TABLE `test_rename_foreign_key_target` (`source_id` integer not null);
 ALTER TABLE `test_rename_foreign_key_target`
-    ADD CONSTRAINT FOREIGN KEY `fk_test_rename_foreign_key_target_source_id` (`source_id`)
+    ADD CONSTRAINT `fk_test_rename_foreign_key_target_source_id` FOREIGN KEY (`source_id`)
     REFERENCES `test_rename_foreign_key_source` (`id`);
 CREATE TABLE `test_drop_foreign_key_source` (`id` integer primary key not null);
 CREATE TABLE `test_drop_foreign_key_target` (`source_id` integer not null);
 ALTER TABLE `test_drop_foreign_key_target`
-    ADD CONSTRAINT FOREIGN KEY `fk_test_drop_foreign_key_target_source_id` (`source_id`)
+    ADD CONSTRAINT `fk_test_drop_foreign_key_target_source_id` FOREIGN KEY (`source_id`)
     REFERENCES `test_drop_foreign_key_source` (`id`);
 CREATE TABLE `test_drop_table`(`id` integer);
 CREATE TABLE `test_insert`(

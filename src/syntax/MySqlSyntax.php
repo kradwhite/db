@@ -42,7 +42,7 @@ class MySqlSyntax extends SqlSyntax
         $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)} (\n{$this->columnsToString($columns)}";
         if ($primaryKeys['columns']) {
             $pkColumns = implode(', ', $this->quotes($primaryKeys['columns']));
-            $query .= ",\n\tCONSTRAINT PRIMARY KEY{$this->indexType($primaryKeys['options'])} ($pkColumns)";
+            $query .= ",\n\tCONSTRAINT PRIMARY KEY ($pkColumns){$this->indexType($primaryKeys['options'])}";
         }
         foreach ($foreignKeys as $name => &$fk) {
             $query .= ",\n\t" . $this->foreignKeyToString($name, $fk['columns'], $fk['table'], $fk['columns2'], $fk['options']);
@@ -76,7 +76,7 @@ class MySqlSyntax extends SqlSyntax
      */
     public function alterColumn(string $table, string $name, string $type, array $options = []): string
     {
-        return "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)} {$this->columnType($type, $options)}{$this->columnOptions($options)}";
+        return "ALTER TABLE {$this->quote($table)} MODIFY COLUMN {$this->quote($name)} {$this->columnType($type, $options)}{$this->columnOptions($options)}";
     }
 
     /**
@@ -181,6 +181,9 @@ class MySqlSyntax extends SqlSyntax
      */
     protected function columnType(string $type, array &$options): string
     {
+        if ($type == 'string' && !isset($options['limit'])) {
+            $options['limit'] = 256;
+        }
         $result = isset(self::MySqlTypes[$type])
             ? self::MySqlTypes[$type] . $this->limitColumnOption($options)
             : parent::columnType($type, $options);

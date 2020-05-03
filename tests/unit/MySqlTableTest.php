@@ -52,7 +52,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
         $mockPdo = $this->tester->mysqlDriver()->getPdo();
         $table = $this->getTable();
         $table->alterColumn('col', 'bigint', ['null' => true, 'limit' => 15, 'default' => 1000, 'after' => 'col44']);
-        $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE `test` ALTER COLUMN `col` BIGINT(15) DEFAULT 1000 NULL AFTER `col44`");
+        $this->assertEquals($mockPdo->getQuery(), "ALTER TABLE `test` MODIFY COLUMN `col` BIGINT(15) DEFAULT 1000 NULL AFTER `col44`");
         $this->assertEquals($mockPdo->getParams(), []);
     }
 
@@ -195,10 +195,10 @@ class MySqlTableTest extends \Codeception\Test\Unit
             ->create();
         $this->assertEquals($mockPdo->getQuery(), "CREATE TABLE `test` (\n"
             . "\t`col1` INTEGER NOT NULL,\n"
-            . "\t`col2` VARCHAR DEFAULT 'none' NOT NULL,\n"
+            . "\t`col2` VARCHAR(256) DEFAULT 'none' NOT NULL,\n"
             . "\t`ext_id` INTEGER NOT NULL,\n"
             . "\t`id` INT AUTO INCREMENT NOT NULL,\n"
-            . "\tCONSTRAINT PRIMARY KEY USING BTREE (`id`),\n"
+            . "\tCONSTRAINT PRIMARY KEY (`id`) USING BTREE,\n"
             . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_test` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,\n"
             . "\tINDEX `test_ext_id_idx` USING BTREE (`ext_id`),\n"
             . "\tCONSTRAINT UNIQUE INDEX `uq_test_col1_col2_idx` USING BTREE (`col1`, `col2`))\n");
