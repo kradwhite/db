@@ -63,4 +63,10 @@ interface Driver
      * @return Syntax
      */
     public function getSyntax(): Syntax;
+
+    /**
+     * @param bool $value
+     * @return mixed
+     */
+    public function getBoolValue(bool $value);
 }

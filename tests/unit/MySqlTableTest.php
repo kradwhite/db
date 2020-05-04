@@ -131,9 +131,11 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testRenameForeignKey()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("В MySql нельзя переименовывать внешние ключи"), function () {
-            $this->getTable()->renameForeignKey('old_name', 'new_name');
-        });
+        $mockPdo = $this->tester->mysqlDriver()->getPdo();
+        $table = $this->getTable();
+        $table->renameForeignKey('old_name', 'new_name');
+        $this->assertEquals($mockPdo->getQuery(), 'ALTER TABLE `test` RENAME KEY `old_name` TO `new_name`');
+        $this->assertEquals($mockPdo->getParams(), []);
     }
 
     public function testDropForeignKey()

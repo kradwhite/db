@@ -78,6 +78,12 @@ class TableTest extends \Codeception\Test\Unit
             ->createForeignKey(['source_id'], 'test_create_foreign_key_source', ['id'], ['update' => 'CASCADE', 'remove' => 'CASCADE']);
     }
 
+    public function testRenameForeignKey()
+    {
+        $this->tester->conn()->table('test_rename_foreign_key_target')
+            ->renameForeignKey('fk_test_rename_foreign_key_target_source_id', 'new_name');
+    }
+
     public function testDropForeignKey()
     {
         $this->tester->conn()->table('test_drop_foreign_key_target')

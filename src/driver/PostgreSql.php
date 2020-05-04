@@ -43,4 +43,13 @@ class PostgreSql extends Sql
         }
         return $this->syntax;
     }
+
+    /**
+     * @param bool $value
+     * @return mixed|string
+     */
+    public function getBoolValue(bool $value): string
+    {
+        return $value ? 't' : 'f';
+    }
 }

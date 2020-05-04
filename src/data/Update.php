@@ -28,21 +28,16 @@ class Update extends DataQuery
     {
         $query = "UPDATE {$this->table} SET ";
         $fields = [];
-        $params = [];
-        $types = [];
         foreach ($this->attributes as $name => &$value) {
             $fields[] = "{$this->driver->quote($name)}=:$name";
-            $params[$name] = $value;
         }
         $where = [];
+        $params = $this->attributes;
         foreach ($this->condition as $name => &$value) {
             $where[] = "{$this->driver->quote($name)}=:c_$name";
             $params[":c_$name"] = $value;
-            if (isset($this->types[$name])) {
-                $types[":c$name"] = $this->types[$name];
-            }
         }
         $query .= implode(', ', $fields) . " WHERE " . implode(' AND ', $where);
-        return $this->_prepareExecute($query, $params, $types)->rowCount();
+        return $this->_prepareExecute($query, $params, $this->types)->rowCount();
     }
 }

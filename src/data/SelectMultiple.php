@@ -9,8 +9,10 @@ declare (strict_types=1);
 
 namespace kradwhite\db\data;
 
+use kradwhite\db\exception\BeforeQueryException;
 use kradwhite\db\exception\PdoException;
 use kradwhite\db\exception\PdoStatementException;
+use kradwhite\db\FetchStyleTrait;
 
 /**
  * Class SelectMultiple
@@ -18,6 +20,8 @@ use kradwhite\db\exception\PdoStatementException;
  */
 class SelectMultiple extends DataQuery
 {
+    use FetchStyleTrait;
+
     /**
      * @param string $style
      * @param array $order
@@ -25,6 +29,7 @@ class SelectMultiple extends DataQuery
      * @return array
      * @throws PdoException
      * @throws PdoStatementException
+     * @throws BeforeQueryException
      */
     public function prepareExecute(string $style = 'assoc', array $order = [], int $limit = 0): array
     {
@@ -42,7 +47,7 @@ class SelectMultiple extends DataQuery
             $query .= " LIMIT $limit";
         }
         $stmt = $this->_prepareExecute($query, $this->condition, $this->types);
-        $data = $stmt->fetchAll($style);
+        $data = (array)$stmt->fetchAll($this->getStyleFetch($style));
         $this->closeCursor($stmt);
         return $data;
     }

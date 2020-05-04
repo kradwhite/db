@@ -69,7 +69,7 @@ class QueryBuilderTest extends \Codeception\Test\Unit
             . ' GROUP BY (t.col20, t.col21)'
             . ' HAVING (t.col22>1)'
             . ' ORDER BY (t.col23, t.col24) ASC'
-            . ' LIMIT :c_15 OFFSET :c_16', $mockPdo->getQuery());
+            . ' LIMIT 11 OFFSET 22', $mockPdo->getQuery());
         $this->assertEquals([
             'c_0' => 'value1',
             'c_1' => 33,
@@ -86,8 +86,6 @@ class QueryBuilderTest extends \Codeception\Test\Unit
             'c_12' => 'value5',
             'c_13' => '%like',
             'c_14' => '%not like',
-            'col18' => 434,
-            'c_15' => 11,
-            'c_16' => 22], $mockPdo->getParams());
+            'col18' => 434], $mockPdo->getParams());
     }
 }

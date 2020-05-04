@@ -13,6 +13,7 @@ use kradwhite\db\driver\Driver;
 use kradwhite\db\exception\BeforeQueryException;
 use kradwhite\db\exception\PdoException;
 use kradwhite\db\exception\PdoStatementException;
+use kradwhite\db\FetchStyleTrait;
 use kradwhite\db\StmtTrait;
 
 /**
@@ -22,6 +23,7 @@ use kradwhite\db\StmtTrait;
 class QueryBuilder
 {
     use StmtTrait;
+    use FetchStyleTrait;
 
     /** @var array */
     private array $fields = [];
@@ -453,16 +455,16 @@ class QueryBuilder
     {
         $stmt = $this->_prepareExecute($this->buildQuery(), $this->params, $this->types);
         if ($fetch == 'fetch') {
-            $result = $stmt->fetch($style);
+            $result = $stmt->fetch($this->getStyleFetch($style));
         } else if ($fetch == 'all') {
-            $result = $stmt->fetchAll($style);
+            $result = $stmt->fetchAll($this->getStyleFetch($style));
         } else if ($fetch == 'column') {
             $result = $stmt->fetchColumn((int)$style);
         } else {
-            throw new BeforeQueryException("Допустимые значения 1 аргумента: fetch | all | column");
+            throw new BeforeQueryException("Допустимые значения 1 аргумента: fetch|all|column");
         }
         $this->closeCursor($stmt);
-        return $result;
+        return (array)$result;
     }
 
     /**
@@ -515,10 +517,10 @@ class QueryBuilder
         }
         if ($this->limit) {
 
-            $query .= " LIMIT {$this->nextKey($this->limit)}";
+            $query .= " LIMIT {$this->limit}";
         }
         if ($this->offset) {
-            $query .= " OFFSET {$this->nextKey($this->offset)}";
+            $query .= " OFFSET {$this->offset}";
         }
         return $query;
     }

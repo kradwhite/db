@@ -1,11 +1,11 @@
 <?php
 
-namespace kradwhite\tests\PostgreSql;
+namespace kradwhite\tests\MySql;
 
 class InsertTest extends \Codeception\Test\Unit
 {
     /**
-     * @var \PostgreSqlTester
+     * @var \MySqlTester
      */
     protected $tester;
 

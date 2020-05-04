@@ -43,4 +43,13 @@ class MySql extends Sql
         }
         return $this->syntax;
     }
+
+    /**
+     * @param bool $value
+     * @return string
+     */
+    public function getBoolValue(bool $value): string
+    {
+        return $value ? '1' : '0';
+    }
 }

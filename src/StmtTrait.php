@@ -38,7 +38,7 @@ trait StmtTrait
         }
         foreach ($types as $name => $type) {
             if ($type == 'bool') {
-                $params[$name] = $params[$name] ? 'true' : 'false';
+                $params[$name] = $this->driver->getBoolValue($params[$name]);
             } else if ($type == 'int') {
                 $params[$name] = (int)$params[$name];
             } else if ($type == 'string') {

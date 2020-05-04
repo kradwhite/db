@@ -20,25 +20,28 @@ use kradwhite\db\exception\PdoStatementException;
 class InsertMultiple extends DataQuery
 {
     /**
-     * @param array $types
      * @return void
      * @throws PdoException
      * @throws PdoStatementException
      */
-    public function prepareExecute(array $types = [])
+    public function prepareExecute()
     {
         $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($this->condition)) . ") VALUES ";
         $attributes = [];
         $rows = [];
+        $types = [];
         for ($i = 0; $i < count($this->attributes); ++$i) {
             $row = [];
             for ($j = 0; $j < count($this->condition); ++$j) {
-                $name = "p_{$i}_{$j}";
-                $row[] = ":$name";
+                $name = ":p_{$i}_{$j}";
+                $row[] = $name;
                 $attributes[$name] = $this->attributes[$i][$j];
+                if (isset($this->types[$this->condition[$j]])) {
+                    $types[$name] = $this->types[$this->condition[$j]];
+                }
             }
             $rows[] = "(" . implode(', ', $row) . ")";
         }
-        $this->_prepareExecute($query . implode("\n,", $rows), $attributes, $this->types);
+        $this->_prepareExecute($query . implode("\n,", $rows) . ";\n", $attributes, $types);
     }
 }
