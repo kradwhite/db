@@ -199,7 +199,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
             . "\t`col1` INTEGER NOT NULL,\n"
             . "\t`col2` VARCHAR(256) DEFAULT 'none' NOT NULL,\n"
             . "\t`ext_id` INTEGER NOT NULL,\n"
-            . "\t`id` INT AUTO INCREMENT NOT NULL,\n"
+            . "\t`id` INT AUTO_INCREMENT NOT NULL,\n"
             . "\tCONSTRAINT PRIMARY KEY (`id`) USING BTREE,\n"
             . "\tCONSTRAINT FOREIGN KEY `fk_test_ext_test` (`ext_id`) REFERENCES `ext_test` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,\n"
             . "\tINDEX `test_ext_id_idx` USING BTREE (`ext_id`),\n"

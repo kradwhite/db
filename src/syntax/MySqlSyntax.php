@@ -185,7 +185,7 @@ class MySqlSyntax extends SqlSyntax
             ? self::MySqlTypes[$type] . $this->limitColumnOption($options)
             : parent::columnType($type, $options);
         if (in_array($type, ['auto', 'smallauto', 'bigauto'])) {
-            $result .= ' AUTO INCREMENT';
+            $result .= ' AUTO_INCREMENT';
         }
         return $result;
     }
