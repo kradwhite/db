@@ -37,7 +37,10 @@ class Update extends DataQuery
             $where[] = "{$this->driver->quote($name)}=:c_$name";
             $params[":c_$name"] = $value;
         }
-        $query .= implode(', ', $fields) . " WHERE " . implode(' AND ', $where);
+        $query .= implode(', ', $fields);
+        if ($where) {
+            $query .= " WHERE " . implode(' AND ', $where);
+        }
         return $this->_prepareExecute($query, $params, $this->types)->rowCount();
     }
 }

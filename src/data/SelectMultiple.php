@@ -38,7 +38,10 @@ class SelectMultiple extends DataQuery
         foreach ($this->condition as $name => &$value) {
             $condition[] = "{$this->driver->quote($name)}=:$name";
         }
-        $query = "SELECT $fields FROM {$this->table} WHERE " . implode(' AND ', $condition);
+        $query = "SELECT $fields FROM {$this->table}";
+        if ($condition) {
+            $query .= " WHERE " . implode(' AND ', $condition);
+        }
         if ($order) {
             $ascOrDesc = count($order) > 1 ? array_pop($order) : 'ASC';
             $query .= " ORDER BY (" . implode(', ', $this->driver->quotes($order)) . ") $ascOrDesc";

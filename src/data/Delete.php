@@ -30,7 +30,10 @@ class Delete extends DataQuery
         foreach ($this->condition as $name => &$value) {
             $condition[] = "{$this->driver->quote($name)}=:$name";
         }
-        $query = "DELETE FROM {$this->table} WHERE " . implode(' AND ', $condition);
+        $query = "DELETE FROM {$this->table}";
+        if ($condition) {
+            $query .= " WHERE " . implode(' AND ', $condition);
+        }
         return $this->_prepareExecute($query, $this->condition, $this->types)->rowCount();
     }
 }
