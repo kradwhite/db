@@ -10,7 +10,7 @@ declare (strict_types=1);
 namespace kradwhite\db\driver;
 
 use kradwhite\db\exception\PdoException;
-use kradwhite\db\syntax\Syntax;
+use kradwhite\db\syntax\TableSyntax;
 use PDO;
 
 /**
@@ -40,8 +40,8 @@ abstract class Sql implements Driver
     /** @var PDO */
     protected ?PDO $pdo = null;
 
-    /** @var Syntax */
-    protected ?Syntax $syntax = null;
+    /** @var TableSyntax */
+    protected ?TableSyntax $syntax = null;
 
     /**
      * Connection constructor.
@@ -68,7 +68,7 @@ abstract class Sql implements Driver
      */
     public function quote(string $object): string
     {
-        return $this->getSyntax()->quote($object);
+        return $this->getTableSyntax()->quote($object);
     }
 
     /**

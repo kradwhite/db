@@ -16,7 +16,7 @@ use kradwhite\db\exception\BeforeQueryException;
 use kradwhite\db\exception\PdoException;
 use kradwhite\db\exception\PdoStatementException;
 use kradwhite\db\StmtTrait;
-use kradwhite\db\syntax\Syntax;
+use kradwhite\db\syntax\TableSyntax;
 
 /**
  * Class Table
@@ -82,7 +82,7 @@ class Table
      */
     public function createColumn(string $name, string $type, array $options = []): Table
     {
-        $this->_execute($this->getSyntax()->createColumn($this->table, $name, $type, $options));
+        $this->_execute($this->getTableSyntax()->createColumn($this->table, $name, $type, $options));
         return $this;
     }
 
@@ -95,7 +95,7 @@ class Table
      */
     public function alterColumn(string $name, string $type, array $options = []): Table
     {
-        $this->_execute($this->getSyntax()->alterColumn($this->table, $name, $type, $options));
+        $this->_execute($this->getTableSyntax()->alterColumn($this->table, $name, $type, $options));
         return $this;
     }
 
@@ -107,7 +107,7 @@ class Table
      */
     public function renameColumn(string $oldName, string $newName): Table
     {
-        $this->_execute($this->getSyntax()->renameColumn($this->table, $oldName, $newName));
+        $this->_execute($this->getTableSyntax()->renameColumn($this->table, $oldName, $newName));
         return $this;
     }
 
@@ -119,7 +119,7 @@ class Table
      */
     public function dropColumn(string $name, array $options = []): Table
     {
-        $this->_execute($this->getSyntax()->dropColumn($this->table, $name, $options));
+        $this->_execute($this->getTableSyntax()->dropColumn($this->table, $name, $options));
         return $this;
     }
 
@@ -132,7 +132,7 @@ class Table
      */
     public function addIndex(array $columns, array $options = [], string $name = ''): Table
     {
-        $name = $this->getSyntax()->buildIndexName($name, $this->table, $columns, $options);
+        $name = $this->getTableSyntax()->buildIndexName($name, $this->table, $columns, $options);
         if (isset($this->indexes[$name])) {
             throw new BeforeQueryException("Повторное добавление индекса {$this->quote($name)}");
         }
@@ -149,7 +149,7 @@ class Table
      */
     public function createIndex(array $columns, array $options = [], string $name = ''): Table
     {
-        $this->_execute($this->getSyntax()->createIndex($this->table, $columns, $options, $name));
+        $this->_execute($this->getTableSyntax()->createIndex($this->table, $columns, $options, $name));
         return $this;
     }
 
@@ -161,7 +161,7 @@ class Table
      */
     public function renameIndex(string $oldName, string $newName): Table
     {
-        $this->_execute($this->getSyntax()->renameIndex($this->table, $oldName, $newName));
+        $this->_execute($this->getTableSyntax()->renameIndex($this->table, $oldName, $newName));
         return $this;
     }
 
@@ -172,7 +172,7 @@ class Table
      */
     public function dropIndex(string $name): Table
     {
-        $this->_execute($this->getSyntax()->dropIndex($this->table, $name));
+        $this->_execute($this->getTableSyntax()->dropIndex($this->table, $name));
         return $this;
     }
 
@@ -187,7 +187,7 @@ class Table
      */
     public function addForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
-        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $table);
+        $name = $this->getTableSyntax()->buildForeignKeyName($name, $this->table, $table);
         if (isset($this->foreignKeys[$name])) {
             throw new BeforeQueryException("Повторное добавление внешнего ключа {$this->quote($name)}");
         }
@@ -206,8 +206,8 @@ class Table
      */
     public function createForeignKey(array $columns, string $table, array $columns2, array $options = [], string $name = ''): Table
     {
-        $name = $this->getSyntax()->buildForeignKeyName($name, $this->table, $table);
-        $this->_execute($this->getSyntax()->createForeignKey($name, $this->table, $columns, $table, $columns2, $options));
+        $name = $this->getTableSyntax()->buildForeignKeyName($name, $this->table, $table);
+        $this->_execute($this->getTableSyntax()->createForeignKey($name, $this->table, $columns, $table, $columns2, $options));
         return $this;
     }
 
@@ -219,7 +219,7 @@ class Table
      */
     public function renameForeignKey(string $oldName, string $newName): Table
     {
-        $this->_execute($this->getSyntax()->renameForeignKey($this->table, $oldName, $newName));
+        $this->_execute($this->getTableSyntax()->renameForeignKey($this->table, $oldName, $newName));
         return $this;
     }
 
@@ -230,7 +230,7 @@ class Table
      */
     public function dropForeignKey(string $name): Table
     {
-        $this->_execute($this->getSyntax()->dropForeignKey($this->table, $name));
+        $this->_execute($this->getTableSyntax()->dropForeignKey($this->table, $name));
         return $this;
     }
 
@@ -271,7 +271,7 @@ class Table
      */
     public function create(): void
     {
-        $this->_execute($this->getSyntax()->createTable($this->table, $this->columns, $this->indexes, $this->foreignKeys, $this->primaryKeys, $this->options));
+        $this->_execute($this->getTableSyntax()->createTable($this->table, $this->columns, $this->indexes, $this->foreignKeys, $this->primaryKeys, $this->options));
     }
 
     /**
@@ -281,7 +281,7 @@ class Table
      */
     public function rename(string $newName): Table
     {
-        $this->_execute($this->getSyntax()->renameTable($this->table, $newName));
+        $this->_execute($this->getTableSyntax()->renameTable($this->table, $newName));
         return $this;
     }
 
@@ -291,7 +291,7 @@ class Table
      */
     public function drop(): void
     {
-        $this->_execute($this->getSyntax()->dropTable($this->table));
+        $this->_execute($this->getTableSyntax()->dropTable($this->table));
     }
 
     /**
@@ -331,10 +331,10 @@ class Table
     }
 
     /**
-     * @return Syntax
+     * @return TableSyntax
      */
-    private function getSyntax(): Syntax
+    private function getTableSyntax(): TableSyntax
     {
-        return $this->driver->getSyntax();
+        return $this->driver->getTableSyntax();
     }
 }

@@ -10,10 +10,10 @@ declare (strict_types=1);
 namespace kradwhite\db\syntax;
 
 /**
- * Class SqlSyntax
+ * Class TableSqlSyntax
  * @package kradwhite\db\syntax
  */
-abstract class SqlSyntax implements Syntax
+abstract class TableSqlSyntax implements TableSyntax
 {
     /** @var array */
     private const Types = [

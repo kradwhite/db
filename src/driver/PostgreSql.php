@@ -9,8 +9,8 @@ declare (strict_types=1);
 
 namespace kradwhite\db\driver;
 
-use kradwhite\db\syntax\PostgreSqlSyntax;
-use kradwhite\db\syntax\Syntax;
+use kradwhite\db\syntax\TablePostgreSqlSyntax;
+use kradwhite\db\syntax\TableSyntax;
 use PDO;
 
 /**
@@ -34,12 +34,12 @@ class PostgreSql extends Sql
     }
 
     /**
-     * @return Syntax
+     * @return TableSyntax
      */
-    public function getSyntax(): Syntax
+    public function getTableSyntax(): TableSyntax
     {
         if (!$this->syntax) {
-            $this->syntax = new PostgreSqlSyntax();
+            $this->syntax = new TablePostgreSqlSyntax();
         }
         return $this->syntax;
     }

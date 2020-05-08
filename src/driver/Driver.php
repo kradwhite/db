@@ -10,7 +10,8 @@ declare (strict_types=1);
 namespace kradwhite\db\driver;
 
 use kradwhite\db\exception\PdoException;
-use kradwhite\db\syntax\Syntax;
+use kradwhite\db\syntax\MetaSyntax;
+use kradwhite\db\syntax\TableSyntax;
 use PDO;
 
 /**
@@ -60,9 +61,14 @@ interface Driver
     public function quotes(array &$objects): array;
 
     /**
-     * @return Syntax
+     * @return TableSyntax
      */
-    public function getSyntax(): Syntax;
+    public function getTableSyntax(): TableSyntax;
+
+    /**
+     * @return MetaSyntax
+     */
+    public function getMetaSyntax(): MetaSyntax;
 
     /**
      * @param bool $value

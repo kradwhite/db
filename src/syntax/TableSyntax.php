@@ -10,10 +10,10 @@ declare (strict_types=1);
 namespace kradwhite\db\syntax;
 
 /**
- * Interface Syntax
+ * Interface TableSyntax
  * @package kradwhite\db\syntax
  */
-interface Syntax
+interface TableSyntax
 {
     /**
      * @param string $object

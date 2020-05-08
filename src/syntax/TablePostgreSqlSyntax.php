@@ -12,10 +12,10 @@ namespace kradwhite\db\syntax;
 use kradwhite\db\exception\BeforeQueryException;
 
 /**
- * Class PostgreSqlSyntax
+ * Class TablePostgreSqlSyntax
  * @package kradwhite\db\syntax
  */
-class PostgreSqlSyntax extends SqlSyntax
+class TablePostgreSqlSyntax extends TableSqlSyntax
 {
     /** @var array */
     private const PostgreSqlTypes = [

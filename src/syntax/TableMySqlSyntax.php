@@ -10,10 +10,10 @@ declare (strict_types=1);
 namespace kradwhite\db\syntax;
 
 /**
- * Class MySqlSyntax
+ * Class TableMySqlSyntax
  * @package kradwhite\db\syntax
  */
-class MySqlSyntax extends SqlSyntax
+class TableMySqlSyntax extends TableSqlSyntax
 {
     /** @var array */
     private const MySqlTypes = [
