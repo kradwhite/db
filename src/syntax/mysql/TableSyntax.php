@@ -7,13 +7,15 @@
 
 declare (strict_types=1);
 
-namespace kradwhite\db\syntax;
+namespace kradwhite\db\syntax\mysql;
+
+use kradwhite\db\syntax\TableSqlSyntax;
 
 /**
- * Class TableMySqlSyntax
+ * Class TableSyntax
  * @package kradwhite\db\syntax
  */
-class TableMySqlSyntax extends TableSqlSyntax
+class TableSyntax extends TableSqlSyntax
 {
     /** @var array */
     private const MySqlTypes = [

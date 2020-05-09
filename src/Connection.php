@@ -19,6 +19,7 @@ use kradwhite\db\data\Update;
 use kradwhite\db\driver\Driver;
 use kradwhite\db\exception\PdoException;
 use kradwhite\db\exception\PdoStatementException;
+use kradwhite\db\structure\Meta;
 use kradwhite\db\structure\Table;
 
 /**
@@ -187,6 +188,14 @@ class Connection
     public function table(string $table, array $options = []): Table
     {
         return new Table($this->driver, $table, $options);
+    }
+
+    /**
+     * @return Meta
+     */
+    public function meta(): Meta
+    {
+        return new Meta($this->driver);
     }
 
     /**

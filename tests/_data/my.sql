@@ -23,6 +23,8 @@ DROP TABLE IF EXISTS `test_insert_multiple`;
 DROP TABLE IF EXISTS `test_select_multiple`;
 DROP TABLE IF EXISTS `test_select_one`;
 DROP TABLE IF EXISTS `test_query_builder`;
+DROP VIEW IF EXISTS `test_view_select_view`;
+DROP TABLE IF EXISTS `test_table_select_view`;
 
 CREATE TABLE `test_create_table-1` (`id` integer primary key not null);
 CREATE TABLE `test_create_column` (`id` integer primary key not null);
@@ -66,3 +68,5 @@ CREATE TABLE `test_select_one` (`id` INTEGER PRIMARY KEY AUTO_INCREMENT, `name` 
 INSERT INTO `test_select_one` (`name`, `value`, `value2`) VALUES ('name 1', 22, false), ('name 2', 33, true), ('name 1', 22, false);
 CREATE TABLE `test_query_builder` (`id` INTEGER PRIMARY KEY AUTO_INCREMENT, `name` VARCHAR (256), `value` INTEGER, `value2` BOOLEAN);
 INSERT INTO `test_query_builder` (`name`, `value`, `value2`) VALUES ('name 1', 22, false), ('name 2', 33, true);
+CREATE TABLE `test_table_select_view` (`id` INTEGER PRIMARY KEY AUTO_INCREMENT);
+CREATE VIEW `test_view_select_view` AS SELECT * FROM `test_table_select_view`;

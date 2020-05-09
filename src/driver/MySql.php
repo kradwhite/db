@@ -9,7 +9,9 @@ declare (strict_types=1);
 
 namespace kradwhite\db\driver;
 
-use kradwhite\db\syntax\TableMySqlSyntax;
+use kradwhite\db\syntax\MetaSyntax;
+use kradwhite\db\syntax\mysql\MetaSyntax as MetaMySqlSyntax;
+use kradwhite\db\syntax\mysql\TableSyntax as TableMySqlSyntax;
 use kradwhite\db\syntax\TableSyntax;
 use PDO;
 
@@ -38,10 +40,21 @@ class MySql extends Sql
      */
     public function getTableSyntax(): TableSyntax
     {
-        if (!$this->syntax) {
-            $this->syntax = new TableMySqlSyntax();
+        if (!$this->tableSyntax) {
+            $this->tableSyntax = new TableMySqlSyntax();
         }
-        return $this->syntax;
+        return $this->tableSyntax;
+    }
+
+    /**
+     * @return MetaSyntax
+     */
+    public function getMetaSyntax(): MetaSyntax
+    {
+        if (!$this->metaSyntax) {
+            $this->metaSyntax = new MetaMySqlSyntax();
+        }
+        return $this->metaSyntax;
     }
 
     /**

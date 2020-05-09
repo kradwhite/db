@@ -16,47 +16,37 @@ namespace kradwhite\db\syntax;
 interface MetaSyntax
 {
     /**
-     * @return array
+     * @return string
      */
-    public function databases(): array;
+    public function databases(): string;
 
     /**
-     * @param string $database
-     * @return array
+     * @return string
      */
-    public function tables(string $database): array;
+    public function tables(): string;
 
     /**
-     * @param string $database
-     * @return array
+     * @return string
      */
-    public function views(string $database): array;
+    public function views(): string;
 
     /**
-     * @param string $database
-     * @param string $table
-     * @return array
+     * @return string
      */
-    public function columns(string $database, string $table): array;
+    public function columns(): string;
 
     /**
-     * @param string $database
-     * @param string $table
-     * @return array
+     * @return string
      */
-    public function primaryKey(string $database, string $table): array;
+    public function primaryKeys(): string;
 
     /**
-     * @param string $database
-     * @param string $table
-     * @return array
+     * @return string
      */
-    public function foreignKeys(string $database, string $table): array;
+    public function foreignKeys(): string;
 
     /**
-     * @param string $database
-     * @param string $table
-     * @return array
+     * @return string
      */
-    public function indexes(string $database, string $table): array;
+    public function indexes(): string;
 }

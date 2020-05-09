@@ -7,15 +7,16 @@
 
 declare (strict_types=1);
 
-namespace kradwhite\db\syntax;
+namespace kradwhite\db\syntax\pgsql;
 
 use kradwhite\db\exception\BeforeQueryException;
+use kradwhite\db\syntax\TableSqlSyntax;
 
 /**
- * Class TablePostgreSqlSyntax
- * @package kradwhite\db\syntax
+ * Class TableSyntax
+ * @package kradwhite\db\syntax\pgsql
  */
-class TablePostgreSqlSyntax extends TableSqlSyntax
+class TableSyntax extends TableSqlSyntax
 {
     /** @var array */
     private const PostgreSqlTypes = [

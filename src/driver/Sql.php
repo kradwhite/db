@@ -10,6 +10,7 @@ declare (strict_types=1);
 namespace kradwhite\db\driver;
 
 use kradwhite\db\exception\PdoException;
+use kradwhite\db\syntax\MetaSyntax;
 use kradwhite\db\syntax\TableSyntax;
 use PDO;
 
@@ -41,7 +42,10 @@ abstract class Sql implements Driver
     protected ?PDO $pdo = null;
 
     /** @var TableSyntax */
-    protected ?TableSyntax $syntax = null;
+    protected ?TableSyntax $tableSyntax = null;
+
+    /** @var MetaSyntax */
+    protected ?MetaSyntax $metaSyntax = null;
 
     /**
      * Connection constructor.
@@ -79,7 +83,7 @@ abstract class Sql implements Driver
     {
         $result = [];
         foreach ($objects as &$object) {
-            $result[] = $this->syntax->quote($object);
+            $result[] = $this->tableSyntax->quote($object);
         }
         return $result;
     }
