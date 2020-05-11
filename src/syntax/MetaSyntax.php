@@ -46,7 +46,13 @@ interface MetaSyntax
     public function foreignKeys(): string;
 
     /**
+     * @param string $database
+     * @return array ['query' => string, 'params' => [':db' => 'string']]
+     */
+    public function indexes(string $database): array;
+
+    /**
      * @return string
      */
-    public function indexes(): string;
+    public function sequences(): string;
 }

@@ -42,57 +42,74 @@ class Meta
     }
 
     /**
+     * @param string $database
      * @return array
      * @throws DbException
      */
-    public function tables(): array
+    public function tables(string $database): array
     {
-        return $this->query($this->driver->getMetaSyntax()->tables(), 'assoc');
+        return $this->query($this->driver->getMetaSyntax()->tables(), 'column', [':db' => $database]);
     }
 
     /**
+     * @param string $database
      * @return array
      * @throws DbException
      */
-    public function views(): array
+    public function views(string $database): array
     {
-        return $this->query($this->driver->getMetaSyntax()->views(), 'assoc');
+        return $this->query($this->driver->getMetaSyntax()->views(), 'column', [':db' => $database]);
     }
 
     /**
+     * @param string $database
      * @return array
      * @throws DbException
      */
-    public function columns(): array
+    public function columns(string $database): array
     {
-        return $this->query($this->driver->getMetaSyntax()->columns(), 'assoc');
+        return $this->query($this->driver->getMetaSyntax()->columns(), 'assoc', [':db' => $database]);
     }
 
     /**
+     * @param string $database
      * @return array
      * @throws DbException
      */
-    public function primaryKeys(): array
+    public function primaryKeys(string $database): array
     {
-        return $this->query($this->driver->getMetaSyntax()->primaryKeys(), 'assoc');
+        return $this->query($this->driver->getMetaSyntax()->primaryKeys(), 'assoc', [':db' => $database]);
     }
 
     /**
+     * @param string $database
      * @return array
      * @throws DbException
      */
-    public function foreignKeys(): array
+    public function foreignKeys(string $database): array
     {
-        return $this->query($this->driver->getMetaSyntax()->foreignKeys(), 'assoc');
+        return $this->query($this->driver->getMetaSyntax()->foreignKeys(), 'assoc', [':db' => $database]);
     }
 
     /**
+     * @param string $database
      * @return array
      * @throws DbException
      */
-    public function indexes(): array
+    public function indexes(string $database): array
     {
-        return $this->query($this->driver->getMetaSyntax()->indexes(), 'assoc');
+        $queryAndParams = $this->driver->getMetaSyntax()->indexes($database);
+        return $this->query($queryAndParams['query'], 'assoc', $queryAndParams['params']);
+    }
+
+    /**
+     * @param string $database
+     * @return array
+     * @throws DbException
+     */
+    public function sequences(string $database): array
+    {
+        return $this->query($this->driver->getMetaSyntax()->sequences(), 'column', [':db' => $database]);
     }
 
     /**

@@ -9,6 +9,7 @@ declare (strict_types=1);
 
 namespace kradwhite\db\syntax\mysql;
 
+use kradwhite\db\exception\BeforeQueryException;
 use kradwhite\db\syntax\MetaSyntax as MetaSyntaxInterface;
 
 /**
@@ -30,7 +31,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function tables(): string
     {
-        return "SELECT `TABLE_NAME` `table`, `TABLE_SCHEMA` `db` FROM `information_schema`.`TABLES`";
+        return "SELECT `TABLE_NAME` `table` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`=:db";
     }
 
     /**
@@ -38,7 +39,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function views(): string
     {
-        return "SELECT `TABLE_NAME` `table`, `TABLE_SCHEMA` `db` FROM `information_schema`.`VIEWS`";
+        return "SELECT `TABLE_NAME` `table` FROM `information_schema`.`VIEWS` WHERE `TABLE_SCHEMA`=:db";
     }
 
     /**
@@ -46,11 +47,11 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function columns(): string
     {
-        return "SELECT `TABLE_NAME` `table`,"
-            . " `TABLE_SCHEMA` `db`,"
-            . " `COLUMN_NAME` `column`,"
-            . " `ORDINAL_POSITION` `position`" .
-            " FROM `information_schema`.`COLUMNS`";
+        return "SELECT `TABLE_NAME` `table`,
+            `COLUMN_NAME` `column`,
+            `ORDINAL_POSITION` `position`
+            FROM `information_schema`.`COLUMNS`
+            WHERE `TABLE_SCHEMA`=:db";
     }
 
     /**
@@ -58,7 +59,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function primaryKeys(): string
     {
-        return $this->columns() . " WHERE `COLUMN_KEY`='PRI'";
+        return $this->columns() . " AND `COLUMN_KEY`='PRI'";
     }
 
     /**
@@ -66,26 +67,36 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function foreignKeys(): string
     {
-        return "SELECT `TABLE_NAME` `table`,"
-            . " `ORDINAL_POSITION` `position`,"
-            . " `TABLE_SCHEMA` `db`,"
-            . " `COLUMN_NAME` `column`,"
-            . " `REFERENCED_TABLE_NAME` `table2`,"
-            . " `REFERENCED_TABLE_SCHEMA` `db2`,"
-            . " `REFERENCED_COLUMN_NAME` `column2`"
-            . " FROM `information_schema`.`KEY_COLUMN_USAGE`"
-            . " WHERE `REFERENCED_TABLE_SCHEMA` IS NOT NULL";
+        return "SELECT `TABLE_NAME` `table`,
+            `ORDINAL_POSITION` `position`,
+            `TABLE_SCHEMA` `db`,
+            `COLUMN_NAME` `column`,
+            `REFERENCED_TABLE_NAME` `table2`,
+            `REFERENCED_TABLE_SCHEMA` `db2`,
+            `REFERENCED_COLUMN_NAME` `column2`
+            FROM `information_schema`.`KEY_COLUMN_USAGE`
+            WHERE `REFERENCED_TABLE_SCHEMA` IS NOT NULL AND `TABLE_SCHEMA`=:db";
+    }
+
+    /**
+     * @param string $database
+     * @return array
+     */
+    public function indexes(string $database): array
+    {
+        return ['query' => "SELECT DISTINCT `TABLE_NAME` `table`,
+            `INDEX_NAME` `index`,
+            `COLUMN_NAME` `column`
+            FROM `information_schema`.`STATISTICS`
+            WHERE `TABLE_SCHEMA`=:db", 'params' => [':db' => $database]];
     }
 
     /**
      * @return string
+     * @throws BeforeQueryException
      */
-    public function indexes(): string
+    public function sequences(): string
     {
-        return "SELECT DISTINCT `TABLE_NAME` `table`,"
-            . " `INDEX_NAME` `index`,"
-            . " `TABLE_SCHEMA` `db`,"
-            . " `COLUMN_NAME` `column`"
-            . " FROM `information_schema`.`STATISTICS`";
+        throw new BeforeQueryException("Mysql не имеет sequences");
     }
 }
