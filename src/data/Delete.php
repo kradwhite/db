@@ -32,7 +32,7 @@ class Delete extends DataQuery
         }
         $query = "DELETE FROM {$this->table}";
         if ($condition) {
-            $query .= " WHERE " . implode(' AND ', $condition);
+            $query .= ' WHERE ' . implode(' AND ', $condition);
         }
         return $this->_prepareExecute($query, $this->condition, $this->types)->rowCount();
     }

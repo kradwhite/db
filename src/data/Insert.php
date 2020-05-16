@@ -28,11 +28,11 @@ class Insert extends DataQuery
     public function prepareExecute(string $sequence = null): string
     {
         $fieldNames = array_keys($this->attributes);
-        $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($fieldNames)) . ") VALUES (";
+        $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($fieldNames)) . ') VALUES (';
         for ($i = 0; $i < count($fieldNames); ++$i) {
             $fieldNames[$i] = ":{$fieldNames[$i]}";
         }
-        $this->_prepareExecute($query . implode(', ', $fieldNames) . ")", $this->attributes, $this->types);
+        $this->_prepareExecute($query . implode(', ', $fieldNames) . ')', $this->attributes, $this->types);
         return $this->driver->getPdo()->lastInsertId($sequence);
     }
 }

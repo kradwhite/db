@@ -461,7 +461,7 @@ class QueryBuilder
         } else if ($fetch == 'column') {
             $result = $stmt->fetchColumn((int)$style);
         } else {
-            throw new BeforeQueryException("Допустимые значения 1 аргумента: fetch|all|column");
+            throw new BeforeQueryException('Допустимые значения 1 аргумента: fetch|all|column');
         }
         $this->closeCursor($stmt);
         return (array)$result;
@@ -476,13 +476,13 @@ class QueryBuilder
         if ($this->union) {
             $query = $this->union->buildQuery() . ' UNION ' . $this->unionAll ? 'ALL ' : '';
         }
-        $query .= "SELECT ";
+        $query .= 'SELECT ';
         $select = [];
         if ($this->fields) {
             $select[] = implode(', ', $this->fields);
         }
         if ($this->distinct) {
-            $select[] = "DISTINCT(" . implode(', ', $this->distinct) . ")";
+            $select[] = 'DISTINCT(' . implode(', ', $this->distinct) . ')';
         }
         if ($this->count) {
             $select[] = "COUNT({$this->count})";
@@ -496,24 +496,24 @@ class QueryBuilder
         if ($this->sum) {
             $select[] = "SUM({$this->sum})";
         }
-        $query .= implode(', ', $select) . " FROM " . implode(', ', $this->tables);
+        $query .= implode(', ', $select) . ' FROM ' . implode(', ', $this->tables);
         foreach ($this->joins as &$join) {
             $query .= " {$join['type']} JOIN {$join['table']} ON " . implode(' AND ', $join['condition']);
         }
         if ($this->where) {
-            $query .= " WHERE " . implode(' ', $this->where[0][1]);
+            $query .= ' WHERE ' . implode(' ', $this->where[0][1]);
             for ($i = 1; $i < count($this->where); $i++) {
                 $query .= " {$this->where[$i][0]} " . implode(' ', $this->where[$i][1]);
             }
         }
         if ($this->groupBy) {
-            $query .= " GROUP BY (" . implode(', ', $this->groupBy) . ")";
+            $query .= ' GROUP BY (' . implode(', ', $this->groupBy) . ')';
         }
         if ($this->having) {
             $query .= " HAVING ({$this->having})";
         }
         if ($this->orderBy) {
-            $query .= " ORDER BY (" . implode(', ', $this->orderBy[1]) . ") {$this->orderBy[0]}";
+            $query .= ' ORDER BY (' . implode(', ', $this->orderBy[1]) . ") {$this->orderBy[0]}";
         }
         if ($this->limit) {
 
@@ -532,7 +532,7 @@ class QueryBuilder
      */
     private function nextKey($value, string $type = ''): string
     {
-        $key = "c_" . $this->i++;
+        $key = 'c_' . $this->i++;
         $this->params[$key] = $value;
         $result = ":$key";
         if ($type) {

@@ -95,7 +95,7 @@ abstract class Sql implements Driver
     public function begin()
     {
         if (!$this->getPdo()->beginTransaction()) {
-            throw new PdoException("Ошибка открытия транзации: ", $this->getPdo());
+            throw new PdoException('Ошибка открытия транзации: ', $this->getPdo());
         }
     }
 
@@ -106,7 +106,7 @@ abstract class Sql implements Driver
     public function commit()
     {
         if (!$this->getPdo()->commit()) {
-            throw new PdoException("Ошибка фиксации транзации: ", $this->getPdo());
+            throw new PdoException('Ошибка фиксации транзации: ', $this->getPdo());
         }
     }
 
@@ -117,7 +117,7 @@ abstract class Sql implements Driver
     public function rollback()
     {
         if (!$this->getPdo()->rollBack()) {
-            throw new PdoException("Ошибка отката транзации: ", $this->getPdo());
+            throw new PdoException('Ошибка отката транзации: ', $this->getPdo());
         }
     }
 

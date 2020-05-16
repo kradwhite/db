@@ -40,17 +40,19 @@ class SelectMultiple extends DataQuery
         }
         $query = "SELECT $fields FROM {$this->table}";
         if ($condition) {
-            $query .= " WHERE " . implode(' AND ', $condition);
+            $query .= ' WHERE ' . implode(' AND ', $condition);
         }
         if ($order) {
             $ascOrDesc = count($order) > 1 ? array_pop($order) : 'ASC';
-            $query .= " ORDER BY (" . implode(', ', $this->driver->quotes($order)) . ") $ascOrDesc";
+            $query .= ' ORDER BY (' . implode(', ', $this->driver->quotes($order)) . ") $ascOrDesc";
         }
         if ($limit) {
             $query .= " LIMIT $limit";
         }
         $stmt = $this->_prepareExecute($query, $this->condition, $this->types);
-        $data = (array)$stmt->fetchAll($this->getStyleFetch($style));
+        if (!$data = $stmt->fetchAll($this->getStyleFetch($style))) {
+            $data = [];
+        }
         $this->closeCursor($stmt);
         return $data;
     }

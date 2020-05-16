@@ -38,10 +38,12 @@ class SelectOne extends DataQuery
         }
         $query = "SELECT $fields FROM {$this->table}";
         if ($condition) {
-            $query .= " WHERE " . implode(' AND ', $condition) . " LIMIT 1";
+            $query .= ' WHERE ' . implode(' AND ', $condition) . ' LIMIT 1';
         }
         $stmt = $this->_prepareExecute($query, $this->condition, $this->types);
-        $data = (array)$stmt->fetch($this->getStyleFetch($style));
+        if (!$data = $stmt->fetch($this->getStyleFetch($style))) {
+            $data = [];
+        }
         $this->closeCursor($stmt);
         return $data;
     }

@@ -39,7 +39,7 @@ class Update extends DataQuery
         }
         $query .= implode(', ', $fields);
         if ($where) {
-            $query .= " WHERE " . implode(' AND ', $where);
+            $query .= ' WHERE ' . implode(' AND ', $where);
         }
         return $this->_prepareExecute($query, $params, $this->types)->rowCount();
     }

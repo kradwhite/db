@@ -34,7 +34,7 @@ trait StmtTrait
     protected function _prepareExecute(string $query, array $params = [], array $types = []): PDOStatement
     {
         if (!$stmt = $this->driver->getPdo()->prepare($query)) {
-            throw new PdoException("Ошибка подготовки запроса: ", $this->driver->getPdo());
+            throw new PdoException('Ошибка подготовки запроса: ', $this->driver->getPdo());
         }
         foreach ($types as $name => $type) {
             if ($type == 'bool') {
@@ -46,7 +46,7 @@ trait StmtTrait
             }
         }
         if (!$stmt->execute($params)) {
-            throw new PdoStatementException("Ошика выполнения запроса: ", $stmt);
+            throw new PdoStatementException('Ошика выполнения запроса: ', $stmt);
         } else {
             return $stmt;
         }
@@ -73,7 +73,7 @@ trait StmtTrait
     protected function closeCursor(PDOStatement $stmt)
     {
         if (!$stmt->closeCursor()) {
-            throw new PdoStatementException("Ошибка закрытия курсора: ", $stmt);
+            throw new PdoStatementException('Ошибка закрытия курсора: ', $stmt);
         }
     }
 }

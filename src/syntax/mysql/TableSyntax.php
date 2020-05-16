@@ -212,8 +212,8 @@ class TableSyntax extends TableSqlSyntax
     private function foreignKeyToString(string $name, array $columns, string $table2, array $columns2, array $options): string
     {
         return "CONSTRAINT FOREIGN KEY {$this->quote($name)}"
-            . " (" . implode(', ', $this->quotes($columns)) . ") REFERENCES {$this->quote($table2)}"
-            . " (" . implode(', ', $this->quotes($columns2)) . ")"
+            . ' (' . implode(', ', $this->quotes($columns)) . ") REFERENCES {$this->quote($table2)}"
+            . ' (' . implode(', ', $this->quotes($columns2)) . ')'
             . $this->foreignKeyOptions($options);
     }
 }

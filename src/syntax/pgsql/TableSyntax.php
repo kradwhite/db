@@ -43,7 +43,7 @@ class TableSyntax extends TableSqlSyntax
     public function createTable(string $table, array $columns, array $indexes, array $foreignKeys, array $primaryKeys, array $options): string
     {
         if (!$columns) {
-            throw new BeforeQueryException("В таблице должна быть минимум 1 колонка");
+            throw new BeforeQueryException('В таблице должна быть минимум 1 колонка');
         }
         $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)} (\n{$this->columnsToString($columns)}";
         if ($primaryKeys['columns']) {
@@ -70,8 +70,8 @@ class TableSyntax extends TableSqlSyntax
     {
         $prefix = "ALTER TABLE {$this->quote($table)} ALTER COLUMN {$this->quote($name)}";
         return "$prefix TYPE {$this->columnType($type, $options)};\n"
-            . "$prefix " . (isset($options['null']) && $options['null'] ? "DROP" : "SET") . " NOT NULL;\n"
-            . "$prefix " . (isset($options['default']) ? "SET DEFAULT '{$options['default']}'" : "DROP DEFAULT") . ";\n";
+            . "$prefix " . (isset($options['null']) && $options['null'] ? 'DROP' : 'SET') . " NOT NULL;\n"
+            . "$prefix " . (isset($options['default']) ? "SET DEFAULT '{$options['default']}'" : 'DROP DEFAULT') . ";\n";
     }
 
     /**
@@ -181,8 +181,8 @@ class TableSyntax extends TableSqlSyntax
     private function foreignKeyToString(string $name, array $columns, string $table2, array $columns2, array $options): string
     {
         return "CONSTRAINT {$this->quote($name)} FOREIGN KEY"
-            . " (" . implode(', ', $this->quotes($columns)) . ") REFERENCES {$this->quote($table2)}"
-            . " (" . implode(', ', $this->quotes($columns2)) . ")"
+            . ' (' . implode(', ', $this->quotes($columns)) . ") REFERENCES {$this->quote($table2)}"
+            . ' (' . implode(', ', $this->quotes($columns2)) . ')'
             . $this->foreignKeyOptions($options);
     }
 }

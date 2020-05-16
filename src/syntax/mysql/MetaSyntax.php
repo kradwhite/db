@@ -23,7 +23,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function databases(): string
     {
-        return "SELECT `SCHEMA_NAME` FROM `information_schema`.`SCHEMATA`";
+        return 'SELECT `SCHEMA_NAME` FROM `information_schema`.`SCHEMATA`';
     }
 
     /**
@@ -31,7 +31,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function tables(): string
     {
-        return "SELECT `TABLE_NAME` `table` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`=:db";
+        return 'SELECT `TABLE_NAME` `table` FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA`=:db';
     }
 
     /**
@@ -39,7 +39,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function views(): string
     {
-        return "SELECT `TABLE_NAME` `table` FROM `information_schema`.`VIEWS` WHERE `TABLE_SCHEMA`=:db";
+        return 'SELECT `TABLE_NAME` `table` FROM `information_schema`.`VIEWS` WHERE `TABLE_SCHEMA`=:db';
     }
 
     /**
@@ -47,11 +47,11 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function columns(): string
     {
-        return "SELECT `TABLE_NAME` `table`,
+        return 'SELECT `TABLE_NAME` `table`,
             `COLUMN_NAME` `column`,
             `ORDINAL_POSITION` `position`
             FROM `information_schema`.`COLUMNS`
-            WHERE `TABLE_SCHEMA`=:db";
+            WHERE `TABLE_SCHEMA`=:db';
     }
 
     /**
@@ -67,7 +67,7 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function foreignKeys(): string
     {
-        return "SELECT `TABLE_NAME` `table`,
+        return 'SELECT `TABLE_NAME` `table`,
             `ORDINAL_POSITION` `position`,
             `TABLE_SCHEMA` `db`,
             `COLUMN_NAME` `column`,
@@ -75,7 +75,7 @@ class MetaSyntax implements MetaSyntaxInterface
             `REFERENCED_TABLE_SCHEMA` `db2`,
             `REFERENCED_COLUMN_NAME` `column2`
             FROM `information_schema`.`KEY_COLUMN_USAGE`
-            WHERE `REFERENCED_TABLE_SCHEMA` IS NOT NULL AND `TABLE_SCHEMA`=:db";
+            WHERE `REFERENCED_TABLE_SCHEMA` IS NOT NULL AND `TABLE_SCHEMA`=:db';
     }
 
     /**
@@ -84,11 +84,11 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function indexes(string $database): array
     {
-        return ['query' => "SELECT DISTINCT `TABLE_NAME` `table`,
+        return ['query' => 'SELECT DISTINCT `TABLE_NAME` `table`,
             `INDEX_NAME` `index`,
             `COLUMN_NAME` `column`
             FROM `information_schema`.`STATISTICS`
-            WHERE `TABLE_SCHEMA`=:db", 'params' => [':db' => $database]];
+            WHERE `TABLE_SCHEMA`=:db', 'params' => [':db' => $database]];
     }
 
     /**
@@ -97,6 +97,6 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function sequences(): string
     {
-        throw new BeforeQueryException("Mysql не имеет sequences");
+        throw new BeforeQueryException('Mysql не имеет sequences');
     }
 }

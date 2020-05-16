@@ -26,7 +26,7 @@ class InsertMultiple extends DataQuery
      */
     public function prepareExecute()
     {
-        $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($this->condition)) . ") VALUES ";
+        $query = "INSERT INTO {$this->table} (" . implode(', ', $this->driver->quotes($this->condition)) . ') VALUES ';
         $attributes = [];
         $rows = [];
         $types = [];
@@ -40,7 +40,7 @@ class InsertMultiple extends DataQuery
                     $types[$name] = $this->types[$this->condition[$j]];
                 }
             }
-            $rows[] = "(" . implode(', ', $row) . ")";
+            $rows[] = '(' . implode(', ', $row) . ')';
         }
         $this->_prepareExecute($query . implode("\n,", $rows) . ";\n", $attributes, $types);
     }
