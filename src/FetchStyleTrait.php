@@ -19,6 +19,7 @@ trait FetchStyleTrait
     /**
      * @param string $style
      * @return int
+     * @throws BeforeQueryException
      */
     private function getStyleFetch(string $style): int
     {
