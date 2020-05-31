@@ -25,7 +25,7 @@ class DriverFactoryTest extends \Codeception\Test\Unit
     // tests
     public function testBuildFail()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Драйвер 'wrong' не поддерживается"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('driver-not-support', ['wrong']), function () {
             DriverFactory::build('wrong', '', '', '', '');
         });
     }

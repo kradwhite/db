@@ -67,7 +67,7 @@ class Table
     public function addColumn(string $name, string $type, array $options = []): Table
     {
         if (isset($this->columns[$name])) {
-            throw new BeforeQueryException("Повторное добавление колонки {$this->quote($name)}");
+            throw new BeforeQueryException('re-adding-column', [$this->quote($name)]);
         }
         $this->columns[$name] = compact(['type', 'options']);
         return $this;
@@ -134,7 +134,7 @@ class Table
     {
         $name = $this->getTableSyntax()->buildIndexName($name, $this->table, $columns, $options);
         if (isset($this->indexes[$name])) {
-            throw new BeforeQueryException("Повторное добавление индекса {$this->quote($name)}");
+            throw new BeforeQueryException('re-adding-index', [$this->quote($name)]);
         }
         $this->indexes[$name] = compact(['columns', 'options']);
         return $this;
@@ -189,7 +189,7 @@ class Table
     {
         $name = $this->getTableSyntax()->buildForeignKeyName($name, $this->table, $table);
         if (isset($this->foreignKeys[$name])) {
-            throw new BeforeQueryException("Повторное добавление внешнего ключа {$this->quote($name)}");
+            throw new BeforeQueryException('re-adding-foreign-key', [$this->quote($name)]);
         }
         $this->foreignKeys[$name] = compact(['columns', 'table', 'columns2', 'options']);
         return $this;
@@ -243,7 +243,7 @@ class Table
     public function primaryKey(string $column, array $options = []): Table
     {
         if (in_array($column, $this->primaryKeys['columns'])) {
-            throw new BeforeQueryException("Повторное добавление первичного ключа {$this->quote($column)}");
+            throw new BeforeQueryException('re-adding-primary-key', [$this->quote($column)]);
         }
         $this->primaryKeys['columns'][] = $column;
         $this->primaryKeys['options'] += $options;

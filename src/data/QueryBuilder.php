@@ -461,7 +461,7 @@ class QueryBuilder
         } else if ($fetch == 'column') {
             $result = $stmt->fetchColumn((int)$style);
         } else {
-            throw new BeforeQueryException('Допустимые значения 1 аргумента: fetch|all|column');
+            throw new BeforeQueryException('fetch-type-wrong');
         }
         $this->closeCursor($stmt);
         return (array)$result;

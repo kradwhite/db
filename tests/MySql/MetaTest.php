@@ -84,7 +84,7 @@ class MetaTest extends \Codeception\Test\Unit
 
     public function testSequences()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Mysql не имеет sequences"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('mysql-sequences-not-exist'), function () {
             $this->tester->conn()->meta()->sequences('test-1');
         });
     }

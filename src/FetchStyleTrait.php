@@ -30,7 +30,7 @@ trait FetchStyleTrait
         } else if ($style == 'column') {
             return PDO::FETCH_COLUMN;
         } else {
-            throw new BeforeQueryException('Неверное значение style. Style может быть assoc|num|column');
+            throw new BeforeQueryException('style-is-wrong');
         }
     }
 }

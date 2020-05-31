@@ -31,7 +31,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
     // tests
     public function testAddColumn()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление колонки `col`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('re-adding-column', ['`col`']), function () {
             $table = $this->getTable();
             $table->addColumn('col', 'string');
             $table->addColumn('col', 'string');
@@ -76,7 +76,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testAddCompositeIndex()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление индекса `uq_test_col_col2_idx`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('re-adding-index', ['`uq_test_col_col2_idx`']), function () {
             $table = $this->getTable();
             $table->addIndex(['col', 'col2'], ['unique' => true]);
             $table->addIndex(['col', 'col2'], ['unique' => true]);
@@ -112,7 +112,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testAddForeignKey()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление внешнего ключа `fk_test_ext`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('re-adding-foreign-key', ['`fk_test_ext`']), function () {
             $table = $this->getTable();
             $table->addForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2'], ['delete' => 'CASCADE', 'update' => 'CASCADE']);
             $table->addForeignKey(['ext_id', 'ext_id2'], 'ext', ['id', 'id2']);
@@ -149,7 +149,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testPrimaryKey()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление первичного ключа `id`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('re-adding-primary-key', ['`id`']), function () {
             $table = $this->getTable();
             $table->primaryKey('id', []);
             $table->primaryKey('id', []);
@@ -158,7 +158,7 @@ class MySqlTableTest extends \Codeception\Test\Unit
 
     public function testCompositePrimaryKey()
     {
-        $this->tester->expectThrowable(new BeforeQueryException("Повторное добавление первичного ключа `id`"), function () {
+        $this->tester->expectThrowable(new BeforeQueryException('re-adding-primary-key', ['`id`']), function () {
             $table = $this->getTable();
             $table->compositePrimaryKey(['id', 'id'], []);
         });

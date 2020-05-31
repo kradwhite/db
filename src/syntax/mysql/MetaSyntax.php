@@ -97,6 +97,6 @@ class MetaSyntax implements MetaSyntaxInterface
      */
     public function sequences(): string
     {
-        throw new BeforeQueryException('Mysql не имеет sequences');
+        throw new BeforeQueryException('mysql-sequences-not-exist');
     }
 }

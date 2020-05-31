@@ -35,7 +35,7 @@ class DriverFactory
         } else if ($driver == 'pgsql') {
             return new PostgreSql($host, $dbName, $user, $password, $port, $options);
         } else {
-            throw new BeforeQueryException("Драйвер '$driver' не поддерживается");
+            throw new BeforeQueryException('driver-not-support', [$driver]);
         }
     }
 

@@ -7,21 +7,77 @@
     "content-hash": "0c8e5eed5688c4e0922d17aab25871ab",
     "packages": [
         {
-            "name": "kradwhite/language",
-            "version": "0.13",
+            "name": "kradwhite/config",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kradwhite/language.git",
-                "reference": "1500c3a128ba26e1a8637b6816f0d1079695cb87"
+                "url": "https://github.com/kradwhite/config.git",
+                "reference": "161eca74d1b0c5f351b17a3bf090d20429d7b2da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kradwhite/language/zipball/1500c3a128ba26e1a8637b6816f0d1079695cb87",
-                "reference": "1500c3a128ba26e1a8637b6816f0d1079695cb87",
+                "url": "https://api.github.com/repos/kradwhite/config/zipball/161eca74d1b0c5f351b17a3bf090d20429d7b2da",
+                "reference": "161eca74d1b0c5f351b17a3bf090d20429d7b2da",
+                "shasum": ""
+            },
+            "require": {
+                "kradwhite/language": "*",
+                "php": "~7.4"
+            },
+            "require-dev": {
+                "codeception/codeception": "^4.1",
+                "codeception/module-asserts": "^1.0.0",
+                "codeception/module-filesystem": "^1.0.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kradwhite\\config\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "kradwhite",
+                    "email": "kradwhite@mail.ru",
+                    "homepage": "https://github.com/kradwhite",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Config",
+            "homepage": "https://github.com/kradwhite/config",
+            "keywords": [
+                "config",
+                "configuration",
+                "kradwhite"
+            ],
+            "time": "2020-05-28T16:25:56+00:00"
+        },
+        {
+            "name": "kradwhite/language",
+            "version": "0.16.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kradwhite/language.git",
+                "reference": "72b17f3d1cde4b301c6799ae8519e6052735c09a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kradwhite/language/zipball/72b17f3d1cde4b301c6799ae8519e6052735c09a",
+                "reference": "72b17f3d1cde4b301c6799ae8519e6052735c09a",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
+                "kradwhite/config": "*",
                 "kradwhite/db": "*",
                 "php": "~7.4",
                 "symfony/console": "^5.0"
@@ -70,7 +126,7 @@
                 "locale",
                 "message"
             ],
-            "time": "2020-05-27T02:56:30+00:00"
+            "time": "2020-05-30T09:49:39+00:00"
         },
         {
             "name": "psr/container",
@@ -344,20 +400,20 @@
         },
         {
             "name": "symfony/service-contracts",
-            "version": "v2.0.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/service-contracts.git",
-                "reference": "144c5e51266b281231e947b51223ba14acf1a749"
+                "reference": "66a8f0957a3ca54e4f724e49028ab19d75a8918b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/144c5e51266b281231e947b51223ba14acf1a749",
-                "reference": "144c5e51266b281231e947b51223ba14acf1a749",
+                "url": "https://api.github.com/repos/symfony/service-contracts/zipball/66a8f0957a3ca54e4f724e49028ab19d75a8918b",
+                "reference": "66a8f0957a3ca54e4f724e49028ab19d75a8918b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2.5",
+                "php": ">=7.2.5",
                 "psr/container": "^1.0"
             },
             "suggest": {
@@ -366,7 +422,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.1-dev"
                 }
             },
             "autoload": {
@@ -398,7 +454,21 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-11-18T17:27:11+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-20T17:43:50+00:00"
         }
     ],
     "packages-dev": [
@@ -883,20 +953,20 @@
         },
         {
             "name": "doctrine/instantiator",
-            "version": "1.3.0",
+            "version": "1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "ae466f726242e637cebdd526a7d991b9433bacf1"
+                "reference": "f350df0268e904597e3bd9c4685c53e0e333feea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/ae466f726242e637cebdd526a7d991b9433bacf1",
-                "reference": "ae466f726242e637cebdd526a7d991b9433bacf1",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/f350df0268e904597e3bd9c4685c53e0e333feea",
+                "reference": "f350df0268e904597e3bd9c4685c53e0e333feea",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1"
+                "php": "^7.1 || ^8.0"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^6.0",
@@ -935,7 +1005,21 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2019-10-21T16:45:58+00:00"
+            "funding": [
+                {
+                    "url": "https://www.doctrine-project.org/sponsorship.html",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://www.patreon.com/phpdoctrine",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/doctrine%2Finstantiator",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-29T17:27:14+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2770,20 +2854,20 @@
         },
         {
             "name": "symfony/event-dispatcher-contracts",
-            "version": "v2.0.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher-contracts.git",
-                "reference": "af23c2584d4577d54661c434446fb8fbed6025dd"
+                "reference": "405952c4e90941a17e52ef7489a2bd94870bb290"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/af23c2584d4577d54661c434446fb8fbed6025dd",
-                "reference": "af23c2584d4577d54661c434446fb8fbed6025dd",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/405952c4e90941a17e52ef7489a2bd94870bb290",
+                "reference": "405952c4e90941a17e52ef7489a2bd94870bb290",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2.5",
+                "php": ">=7.2.5",
                 "psr/event-dispatcher": "^1"
             },
             "suggest": {
@@ -2792,7 +2876,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.1-dev"
                 }
             },
             "autoload": {
@@ -2824,7 +2908,21 @@
                 "interoperability",
                 "standards"
             ],
-            "time": "2019-11-18T17:27:11+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-05-20T17:43:50+00:00"
         },
         {
             "name": "symfony/finder",

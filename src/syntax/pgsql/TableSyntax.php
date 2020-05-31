@@ -43,7 +43,7 @@ class TableSyntax extends TableSqlSyntax
     public function createTable(string $table, array $columns, array $indexes, array $foreignKeys, array $primaryKeys, array $options): string
     {
         if (!$columns) {
-            throw new BeforeQueryException('В таблице должна быть минимум 1 колонка');
+            throw new BeforeQueryException('table-column-min-1');
         }
         $query = "CREATE TABLE{$this->notExistOption($options)} {$this->quote($table)} (\n{$this->columnsToString($columns)}";
         if ($primaryKeys['columns']) {
